@@ -1,10 +1,16 @@
 const data = [
   {
     projectID: "sadf32idde",
-    name: "project1",
+    projectName: "project1",
     accessCode: "dsjhn323wsdc3lj",
-    progresslevel: ["initialize", "working", "testing", "finished"],
-    progressColor: ["Red", "Green", "Blue","Orange"],
+    progresslevels: [
+      { levelTag: "initialize", color: "blue" },
+      { levelTag: "Working", color: "green" },
+
+      { levelTag: "Testing", color: "red" },
+      { levelTag: "Finished", color: "gray" },
+
+    ],
     tasks: [
       {
         taskid: "T1",
@@ -19,20 +25,27 @@ const data = [
       {
         taskid: "T3",
         taskname: "task 3",
-        progress: 2,
+        progress: 0,
       },
       {
         taskid: "T4",
         taskname: "task 4",
-        progress: 2,
+        progress: 0,
       },
     ],
   },
   {
     projectID: "asfqwdaxc",
-    name: "project2",
+    projectName: "project2",
     accessCode: "asuoh229j2",
-    progresslevel: ["initialize", "working", "testing", "finished"],
+    progresslevels: [
+      { levelTag: "initialize", color: "yellow" },
+      { levelTag: "Working", color: "red" },
+
+      { levelTag: "Testing", color: "purple" },
+      { levelTag: "Finished", color: "pink" },
+
+    ],
     tasks: [
       {
         taskid: "T1",
@@ -42,12 +55,12 @@ const data = [
       {
         taskid: "T2",
         taskname: "Work From Home",
-        progress: 2,
+        progress: 3,
       },
       {
         taskid: "T3",
         taskname: "Dancing Box",
-        progress: 2,
+        progress: 1,
       },
       {
         taskid: "T4",
