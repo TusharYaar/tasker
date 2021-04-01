@@ -43,7 +43,7 @@ const ProjectDetails = ({
           ADD A Task
         </button>
       </div>
-      <ProgressLevels levels={data.progresslevels} handleSort={handleSort} />
+      <ProgressLevels levels={data.progresslevels} handleSort={handleSort} sortTask={sortTask}/>
       <div className="flex flex-col justify-around">{allTask}</div>
     </div>
   );

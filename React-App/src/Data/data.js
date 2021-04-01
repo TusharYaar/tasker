@@ -4,11 +4,10 @@ const data = [
     projectName: "project1",
     accessCode: "dsjhn323wsdc3lj",
     progresslevels: [
-      { levelTag: "initialize", color: "blue" },
+      { levelTag: "Initialize", color: "blue" },
       { levelTag: "Working", color: "green" },
-
       { levelTag: "Testing", color: "red" },
-      { levelTag: "Finished", color: "gray" },
+      { levelTag: "Finished", color: "purple" },
 
     ],
     tasks: [
@@ -39,7 +38,7 @@ const data = [
     projectName: "project2",
     accessCode: "asuoh229j2",
     progresslevels: [
-      { levelTag: "initialize", color: "yellow" },
+      { levelTag: "Initialize", color: "yellow" },
       { levelTag: "Working", color: "red" },
 
       { levelTag: "Testing", color: "purple" },
