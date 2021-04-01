@@ -13,22 +13,22 @@ const data = [
     ],
     tasks: [
       {
-        taskid: "T1",
+        taskID: "T1",
         taskname: "task 1",
         progress: 2,
       },
       {
-        taskid: "T2",
+        taskID: "T2",
         taskname: "task 2",
         progress: 2,
       },
       {
-        taskid: "T3",
+        taskID: "T3",
         taskname: "task 3",
-        progress: 0,
+        progress: 3,
       },
       {
-        taskid: "T4",
+        taskID: "T4",
         taskname: "task 4",
         progress: 0,
       },
@@ -48,22 +48,22 @@ const data = [
     ],
     tasks: [
       {
-        taskid: "T1",
+        taskID: "T1",
         taskname: "Go Home",
         progress: 2,
       },
       {
-        taskid: "T2",
+        taskID: "T2",
         taskname: "Work From Home",
         progress: 3,
       },
       {
-        taskid: "T3",
+        taskID: "T3",
         taskname: "Dancing Box",
         progress: 1,
       },
       {
-        taskid: "T4",
+        taskID: "T4",
         taskname: "Random Task 4",
         progress: 2,
       },
