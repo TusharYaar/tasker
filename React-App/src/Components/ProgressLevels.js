@@ -5,15 +5,13 @@ const ProgressLevels = ({ levels,handleSort,sortTask }) => {
     levelTag: "All"
   }
   const allLevels = levels.map((level, index) => (
-    <ProgressLevel key={index} level={level} value={index} handleSort={handleSort} active={sortTask===index || sortTask===null} />
+    <ProgressLevel key={index} level={level} value={index} handleSort={handleSort} active={sortTask===index} activeAll={sortTask===null} />
   ));
   return (
-    <div className="flex justify-start">
+    <div className="flex justify-start my-4">
       {" "}
       {allLevels}
-      {/* <button className="rounded bg-gray-400 px-5 py-2 mx-3" onClick={()=> handleSort(null)}> */}
-        <ProgressLevel key={levels.length} level={allBtn} value={null} handleSort={handleSort} active={sortTask===null} />
-      {/* </button> */}
+        <ProgressLevel key={levels.length} level={allBtn} value={null} handleSort={handleSort} active={sortTask===null} activeAll={sortTask===null} />
     </div>
   );
 };

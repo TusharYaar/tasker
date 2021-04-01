@@ -3,6 +3,7 @@ import Sidebar from "./SidebarComponent";
 import Navbar from "./NavbarComponent";
 import ProjectDetails from "./ProjectDetailsComponent";
 import { Switch, Route } from "react-router-dom";
+import AddProject from "./AddProject";
 import data from "../Data/data";
 
 const Home = () => {
@@ -32,11 +33,28 @@ const Home = () => {
     console.log(nArr);
     updateProject(nArr);
   };
-
+  const addTask = (project, task) => {
+    console.log(task);
+    const pID = projects.findIndex((pro) => pro.projectID === project);
+    const newArr = projects.map((pro) => {
+      if (pro.projectID === project) {
+        pro.tasks = [
+          ...projects[pID].tasks,
+          {
+            taskID: `T${projects[pID].tasks.length + 1}`,
+            taskName: task,
+            progress: 0,
+          },
+        ];
+        return pro;
+      } else return pro;
+    });
+    updateProject(newArr);
+  };
   return (
-    <div>
+    <div className="h-full">
       <Navbar />
-      <div className="flex flex-row">
+      <div className="flex flex-row h-full">
         <Sidebar
           projects={projects.map((project) => {
             return {
@@ -46,6 +64,7 @@ const Home = () => {
           })}
         />
         <Switch>
+          <Route exact={true} path="/addproject" component={AddProject} />
           <Route
             exact={true}
             path="/:id"
@@ -61,6 +80,7 @@ const Home = () => {
                   updateTaskProgress={updateTaskProgress}
                   deleteTask={deleteTask}
                   handleSort={handleSort}
+                  addTask={addTask}
                 />
               );
             }}

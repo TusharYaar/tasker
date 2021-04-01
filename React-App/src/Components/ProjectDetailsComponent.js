@@ -7,8 +7,16 @@ const ProjectDetails = ({
   deleteTask,
   sortTask,
   handleSort,
+  addTask
 }) => {
-  const [addTaskModal, toggleTaskModal] = useState(false);
+  const [newTask, addNewTask] = useState("");
+  const handleNewTask = (event) => {
+    addNewTask(event.target.value)
+  }
+  const submitNewTask = () => {
+    addTask(data.projectID,newTask);
+    addNewTask("");
+  }
   const sortAllTasks = (value) => {
     if (sortTask === null) return true;
     else if (sortTask === value.progress) return true;
@@ -21,7 +29,7 @@ const ProjectDetails = ({
         projectID={data.projectID}
         key={task.taskID}
         id={task.taskID}
-        name={task.taskname}
+        name={task.taskName}
         progress={task.progress}
         level={data.progresslevels}
         updateTaskProgress={updateTaskProgress}
@@ -29,19 +37,21 @@ const ProjectDetails = ({
       />
     ));
   return (
-    <div className="p-5 flex-col flex justify-around w-full">
-      {addTaskModal ? "hello" : ""}
+    <div className="p-5 flex-col flex justify-start w-full">
       <div className="flex-row flex justify-between items-center my-4">
         <div className="flex-row flex justify-around items-end">
-          <h2 className="text-6xl mx-4">{data.projectName}</h2>
-          <h6 className="text-xl italic">{data.accessCode}</h6>
+          <h2 className="text-6xl m-4 ">{data.projectName}</h2>
+          <h6 className="text-xl italic my-4">{data.accessCode}</h6>
         </div>
+        <div className="flex flex-row items-end">
+          <input className="text-lg border-2 bg-gray-200 focus:border-indigo-600 rounded py-1 px-2" value={newTask} onChange={handleNewTask} />
         <button
-          className="bg-gray-500 p-4 rounded"
-          onClick={() => toggleTaskModal(!addTaskModal)}
+          className="bg-gray-300 text-base px-4 py-2 rounded mx-4"
+          onClick={submitNewTask}
         >
-          ADD A Task
+          Add A Task
         </button>
+        </div>
       </div>
       <ProgressLevels levels={data.progresslevels} handleSort={handleSort} sortTask={sortTask}/>
       <div className="flex flex-col justify-around">{allTask}</div>

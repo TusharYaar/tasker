@@ -1,7 +1,7 @@
 const data = [
   {
     projectID: "sadf32idde",
-    projectName: "project1",
+    projectName: "A long",
     accessCode: "dsjhn323wsdc3lj",
     progresslevels: [
       { levelTag: "Initialize", color: "blue" },
@@ -13,22 +13,22 @@ const data = [
     tasks: [
       {
         taskID: "T1",
-        taskname: "task 1",
+        taskName: "task 1",
         progress: 2,
       },
       {
         taskID: "T2",
-        taskname: "task 2",
+        taskName: "task 2",
         progress: 2,
       },
       {
         taskID: "T3",
-        taskname: "task 3",
+        taskName: "task 3",
         progress: 3,
       },
       {
         taskID: "T4",
-        taskname: "task 4",
+        taskName: "task 4",
         progress: 0,
       },
     ],
@@ -48,22 +48,22 @@ const data = [
     tasks: [
       {
         taskID: "T1",
-        taskname: "Go Home",
+        taskName: "Go Home",
         progress: 2,
       },
       {
         taskID: "T2",
-        taskname: "Work From Home",
+        taskName: "Work From Home",
         progress: 3,
       },
       {
         taskID: "T3",
-        taskname: "Dancing Box",
+        taskName: "Dancing Box",
         progress: 1,
       },
       {
         taskID: "T4",
-        taskname: "Random Task 4",
+        taskName: "Random Task 4",
         progress: 2,
       },
     ],
