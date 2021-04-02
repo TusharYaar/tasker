@@ -33,7 +33,7 @@ const ProjectDetails = ({
         id={task.taskID}
         name={task.taskName}
         progress={task.progress}
-        level={data.progresslevels}
+        level={data.progressLevels}
         updateTaskProgress={updateTaskProgress}
         deleteTask={deleteTask}
       />
@@ -55,7 +55,7 @@ const ProjectDetails = ({
         </button>
         </div>
       </div>
-      <ProgressLevels levels={data.progresslevels} handleSort={handleSort} sortTask={sortTask}/>
+      <ProgressLevels levels={data.progressLevels} handleSort={handleSort} sortTask={sortTask}/>
       <div className="flex flex-col justify-around">{allTask}</div>
     </div>
   );

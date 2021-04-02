@@ -23,7 +23,9 @@ const Home = () => {
     console.log(data);
     return data;
   };
-
+  const addProject = (project) => {
+    updateProject([...projects,project]);
+  }
   const updateTaskProgress = (project, id, value) => {
     const pID = projects.findIndex((pro) => pro.id === project);
     const tID = projects[pID].tasks.findIndex((task) => task.taskID === id);
@@ -78,7 +80,7 @@ const Home = () => {
           })}
         />
         <Switch>
-          <Route exact={true} path="/addproject" component={AddProject} />
+          <Route exact={true} path="/addproject" component={AddProject} addProject={addProject} />
           <Route
             exact={true}
             path="/:id"
