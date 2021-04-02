@@ -16,7 +16,7 @@ const LabelColor = ({ id, handleLabelColor, active }) => {
   );
 };
 
-const AddProject = ({ addProject }) => {
+const AddProject = ({ history,addProject }) => {
   const [newProject, addNewProject] = useState({
     projectName: "",
     progressLevels: [],
@@ -61,7 +61,8 @@ const AddProject = ({ addProject }) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(project),
     });
-    return res.status === 201;
+    return await res.json();
+    // else return false
   };
 
   const handleAddProject = async (event) => {
@@ -77,11 +78,13 @@ const AddProject = ({ addProject }) => {
         uid: "74yf93uh4f79gh97chb3947fg",
         accessCode: "weiryg34",
       };
-      if (await submitForm(project)) {
+      const responseProject = await submitForm(project)
+      if (responseProject) {
         addNewProject({ projectName: "", progressLevels: [] });
         changeLevelColor("red");
         changeLevelTag("");
-        addProject(project);
+        addProject(responseProject);
+        history.push(`/${responseProject.id}`);
       }
     }
   };
@@ -113,6 +116,7 @@ const AddProject = ({ addProject }) => {
               placeholder="Give a name to your project"
               className="p-4 mx-4 "
               onChange={handleChange}
+              value={newProject.projectName}
             />
           </div>
 
@@ -127,6 +131,7 @@ const AddProject = ({ addProject }) => {
                 placeholder="e.g. Initialzied"
                 onChange={handleLevelTag}
                 className="rounded py-2 px-4 mx-2"
+                value={levelTag}
               />
             </div>
             <button

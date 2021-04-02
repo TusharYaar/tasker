@@ -80,7 +80,7 @@ const Home = () => {
           })}
         />
         <Switch>
-          <Route exact={true} path="/addproject" component={AddProject} addProject={addProject} />
+          <Route exact={true} path="/addproject" render={ ({history}) => <AddProject history={history} addProject={addProject} />} />
           <Route
             exact={true}
             path="/:id"
