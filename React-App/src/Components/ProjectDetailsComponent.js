@@ -11,10 +11,12 @@ const ProjectDetails = ({
 }) => {
   const [newTask, addNewTask] = useState("");
   const handleNewTask = (event) => {
-    addNewTask(event.target.value)
+   
+    addNewTask(event.target.value);
   }
   const submitNewTask = () => {
-    addTask(data.projectID,newTask);
+    if(newTask!=="")
+    addTask(data.id,newTask);
     addNewTask("");
   }
   const sortAllTasks = (value) => {
@@ -26,7 +28,7 @@ const ProjectDetails = ({
     .filter(sortAllTasks)
     .map((task) => (
       <Task
-        projectID={data.projectID}
+        projectID={data.id}
         key={task.taskID}
         id={task.taskID}
         name={task.taskName}

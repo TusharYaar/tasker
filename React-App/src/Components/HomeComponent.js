@@ -1,17 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "./SidebarComponent";
 import Navbar from "./NavbarComponent";
 import ProjectDetails from "./ProjectDetailsComponent";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import AddProject from "./AddProject";
-import data from "../Data/data";
 
 const Home = () => {
-  const [projects, updateProject] = useState(data);
+  const [projects, updateProject] = useState([]);
   const [sortTask, updateSort] = useState(null);
 
+  useEffect(() => {
+    const getProjects = async () => {
+      const data = await fetchProjects();
+      updateProject(data);
+    };
+    getProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    const response = await fetch("http://localhost:5000/posts");
+    const data = await response.json();
+    console.log(data);
+    return data;
+  };
+
   const updateTaskProgress = (project, id, value) => {
-    const pID = projects.findIndex((pro) => pro.projectID === project);
+    const pID = projects.findIndex((pro) => pro.id === project);
     const tID = projects[pID].tasks.findIndex((task) => task.taskID === id);
     var newArr = [...projects];
     newArr[pID].tasks[tID].progress += value;
@@ -23,7 +37,7 @@ const Home = () => {
 
   const deleteTask = (project, id) => {
     const nArr = projects.map((pro) => {
-      if (pro.projectID === project) {
+      if (pro.id === project) {
         return {
           ...pro,
           tasks: pro.tasks.filter((task) => task.taskID !== id),
@@ -35,9 +49,9 @@ const Home = () => {
   };
   const addTask = (project, task) => {
     console.log(task);
-    const pID = projects.findIndex((pro) => pro.projectID === project);
+    const pID = projects.findIndex((pro) => pro.id === project);
     const newArr = projects.map((pro) => {
-      if (pro.projectID === project) {
+      if (pro.id === project) {
         pro.tasks = [
           ...projects[pID].tasks,
           {
@@ -58,7 +72,7 @@ const Home = () => {
         <Sidebar
           projects={projects.map((project) => {
             return {
-              projectID: project.projectID,
+              id: project.id,
               projectName: project.projectName,
             };
           })}
@@ -69,13 +83,13 @@ const Home = () => {
             exact={true}
             path="/:id"
             render={({ match }) => {
+              const data = projects.filter(
+                (project) => project.id === match.params.id
+              )[0];
+              if(data)
               return (
                 <ProjectDetails
-                  data={
-                    projects.filter(
-                      (project) => project.projectID === match.params.id
-                    )[0]
-                  }
+                  data={data}
                   sortTask={sortTask}
                   updateTaskProgress={updateTaskProgress}
                   deleteTask={deleteTask}
@@ -83,8 +97,9 @@ const Home = () => {
                   addTask={addTask}
                 />
               );
+              else return <Redirect to={"/"} />
             }}
-          />
+          ></Route>
         </Switch>
       </div>
     </div>
