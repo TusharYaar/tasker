@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MdCheck } from "react-icons/md";
 import labelColors from "../Data/labelColors";
 import DummyProgressLevel from "./DummyProgressLevel";
+import {useHistory} from "react-router-dom";
 const LabelColor = ({ id, handleLabelColor, active }) => {
   return (
     <div>
@@ -16,7 +17,8 @@ const LabelColor = ({ id, handleLabelColor, active }) => {
   );
 };
 
-const AddProject = ({ history,addProject }) => {
+const AddProject = ({ addProject }) => {
+  const history = useHistory();
   const [newProject, addNewProject] = useState({
     projectName: "",
     progressLevels: [],

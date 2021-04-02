@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import Sidebar from "./SidebarComponent";
 import Navbar from "./NavbarComponent";
 import ProjectDetails from "./ProjectDetailsComponent";
+import SignInPage from "./SignInPage";
 import { Switch, Route, Redirect } from "react-router-dom";
 import AddProject from "./AddProject";
+import {useAuth} from "../Context/AuthContext";
 
 const Home = () => {
+  const {currentUser} = useAuth;
   const [projects, updateProject] = useState([]);
   const [sortTask, updateSort] = useState(null);
 
@@ -80,7 +83,8 @@ const Home = () => {
           })}
         />
         <Switch>
-          <Route exact={true} path="/addproject" render={ ({history}) => <AddProject history={history} addProject={addProject} />} />
+          <Route path="/login" component={SignInPage} />
+          <Route exact={true} path="/addproject" render={ ({history}) => <AddProject addProject={addProject} />} />
           <Route
             exact={true}
             path="/:id"
