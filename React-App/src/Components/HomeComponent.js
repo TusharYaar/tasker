@@ -6,7 +6,9 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import AddProject from "./AddProject";
 import UpdateProfile from "./UpdateProfile";
 import {useAuth} from "../Context/AuthContext";
-import {database} from "../firebase"
+import {database} from "../firebase";
+import cuid from 'cuid';
+
 const Home = () => {
   const {currentUser} = useAuth();
   const [projects, updateProject] = useState([]);
@@ -49,7 +51,16 @@ const Home = () => {
     updateSort(value);
   };
 
-  const deleteTask = (project, id) => {
+  const deleteTask = (project, id,task,progress) => {
+    const currentProject = database.projects.doc(project);
+    const TT = {
+      progress: progress,
+      taskName: task,
+      taskID: id,
+
+    }
+    console.log(TT);
+    currentProject.update({tasks: database.arrayRemove(TT)})
     const nArr = projects.map((pro) => {
       if (pro.id === project) {
         return {
@@ -61,23 +72,27 @@ const Home = () => {
     console.log(nArr);
     updateProject(nArr);
   };
-  const addTask = (project, task) => {
-    console.log(task);
+  const addTask = async (project, task) => {
     const pID = projects.findIndex((pro) => pro.id === project);
+    const newTask = {
+      taskID: cuid.slug(),
+      taskName: task,
+      progress: 0,
+    };
+    try {
+    const currentProject = database.projects.doc(project);
+    await currentProject.update({tasks: database.arrayUnion(newTask)});
     const newArr = projects.map((pro) => {
       if (pro.id === project) {
         pro.tasks = [
           ...projects[pID].tasks,
-          {
-            taskID: `T${projects[pID].tasks.length + 1}`,
-            taskName: task,
-            progress: 0,
-          },
+          newTask,
         ];
         return pro;
       } else return pro;
     });
-    updateProject(newArr);
+    updateProject(newArr);}
+    catch (err) {alert("error")}
   };
   const toggleSidebar = () => {
     updateSidebar(!sidebarVisible);

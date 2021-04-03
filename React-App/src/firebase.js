@@ -18,7 +18,9 @@ export const auth = firebase.auth();
 const firestore = firebase.firestore();
 export const database = {
   projects: firestore.collection('projects'),
-  getCurrentTimestamp: firebase.firestore.FieldValue.serverTimestamp
+  getCurrentTimestamp: firebase.firestore.FieldValue.serverTimestamp,
+  arrayUnion: firebase.firestore.FieldValue.arrayUnion,
+  arrayRemove: firebase.firestore.FieldValue.arrayRemove
 }
 console.log();
 export const googleProvider = new firebase.auth.GoogleAuthProvider();

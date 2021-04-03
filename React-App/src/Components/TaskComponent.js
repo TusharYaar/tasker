@@ -21,7 +21,7 @@ const Task = ({progress, name, level,id ,projectID,updateTaskProgress,deleteTask
     
     </div>
     </div>
-    {showDelete ? <div className="self-end mb-3 mx-5">Sure ?<button className="rounded py-2 px-4 bg-red-600 ml-3" onClick={()=>deleteTask(projectID,id)}>Delete</button></div>: null}
+    {showDelete ? <div className="self-end mb-3 mx-5">Sure ?<button className="rounded py-2 px-4 bg-red-600 ml-3" onClick={()=>deleteTask(projectID,id,name,progress)}>Delete</button></div>: null}
     </div>
   );
 };
