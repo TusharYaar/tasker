@@ -7,7 +7,8 @@ const ProjectDetails = ({
   deleteTask,
   sortTask,
   handleSort,
-  addTask
+  addTask,
+  isTaskLoading
 }) => {
   const [newTask, addNewTask] = useState("");
   const handleNewTask = (event) => {
@@ -36,6 +37,7 @@ const ProjectDetails = ({
         level={data.progressLevels}
         updateTaskProgress={updateTaskProgress}
         deleteTask={deleteTask}
+        isTaskLoading={isTaskLoading}
       />
     ));
   return (
@@ -48,8 +50,9 @@ const ProjectDetails = ({
         <div className="flex flex-row items-end">
           <input className="text-lg border-2 bg-gray-200 focus:border-indigo-600 rounded py-1 px-2" value={newTask} onChange={handleNewTask} />
         <button
-          className="bg-gray-300 text-base px-4 py-2 rounded mx-4"
+          className={`bg-gray-300 text-base px-4 py-2 rounded mx-4 ${isTaskLoading ? "cursor-not-allowed opacity-50" : null}`}
           onClick={submitNewTask}
+          disabled={isTaskLoading}
         >
           Add A Task
         </button>

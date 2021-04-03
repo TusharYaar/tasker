@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { MdAdd } from "react-icons/md";
-import {useAuth } from "../Context/AuthContext"
+// import {useAuth } from "../Context/AuthContext"
 const Sidebar = ({ projects ,sidebarVisible, toggleSidebar}) => {
   // const {currentUser} = useAuth();
   const projectLinks = projects.map((project) => {

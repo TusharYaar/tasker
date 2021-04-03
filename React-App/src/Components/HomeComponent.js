@@ -8,44 +8,46 @@ import UpdateProfile from "./UpdateProfile";
 import {useAuth} from "../Context/AuthContext";
 import {database} from "../firebase";
 import cuid from 'cuid';
-
 const Home = () => {
   const {currentUser} = useAuth();
   const [projects, updateProject] = useState([]);
   const [sortTask, updateSort] = useState(null);
   const [sidebarVisible,updateSidebar] = useState(false);
-
+  const [isTaskLoading, toggleTaskLoading] = useState(false);
   useEffect(() => {
     const getProjects = async () => {
-      const data = await fetchProjects();
-      if(data)
-     updateProject(data);
-    };
-    getProjects();
-  }, []);
-  const fetchProjects = async () => {
-    try {
-    const querySnapshot = await database.projects.where("uid","==",currentUser.uid).get();
-    const projects = [];
+      try {
+      const querySnapshot = await  database.projects.where("uid","==",currentUser.uid).get();
+      const projects = [];
       querySnapshot.forEach((doc) => {
         let project =  doc.data();
         project.id = doc.id;
         projects.push(project);
             });
-    return projects;
-} catch (err) {
-  console.log(err);
-}
-  };
+      if(projects)
+     updateProject(projects);}
+     catch(err) {
+       console.log(err);
+     }
+    };
+    getProjects();
+  }, [currentUser.uid]);
   const addProject = (project) => {
     updateProject([...projects,project]);
   }
-  const updateTaskProgress = (project, id, value) => {
-    const pID = projects.findIndex((pro) => pro.id === project);
-    const tID = projects[pID].tasks.findIndex((task) => task.taskID === id);
+  const updateTaskProgress = async (project, id, value) => {
+    toggleTaskLoading(true);
+    try {
+    const pIndex = projects.findIndex((pro) => pro.id === project);
+    const tIndex = projects[pIndex].tasks.findIndex((task) => task.taskID === id);
     var newArr = [...projects];
-    newArr[pID].tasks[tID].progress += value;
+    const updatedTask = {...projects[pIndex].tasks[tIndex],progress:projects[pIndex].tasks[tIndex].progress += value };
+    await database.projects.doc(project).set({tasks:[updatedTask]},{merge:true});
     updateProject(newArr);
+    }catch(err){
+      console.log(err);
+    }
+    toggleTaskLoading(false);
   };
   const handleSort = (value) => {
     updateSort(value);
@@ -53,14 +55,12 @@ const Home = () => {
 
   const deleteTask = (project, id,task,progress) => {
     const currentProject = database.projects.doc(project);
-    const TT = {
+    const taskToDel = {
       progress: progress,
       taskName: task,
       taskID: id,
-
     }
-    console.log(TT);
-    currentProject.update({tasks: database.arrayRemove(TT)})
+    currentProject.update({tasks: database.arrayRemove(taskToDel)})
     const nArr = projects.map((pro) => {
       if (pro.id === project) {
         return {
@@ -69,7 +69,6 @@ const Home = () => {
         };
       } else return pro;
     });
-    console.log(nArr);
     updateProject(nArr);
   };
   const addTask = async (project, task) => {
@@ -130,6 +129,7 @@ const Home = () => {
                   deleteTask={deleteTask}
                   handleSort={handleSort}
                   addTask={addTask}
+                  isTaskLoading={isTaskLoading}
                 />
               );
               else return <Redirect to={"/"} />

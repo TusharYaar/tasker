@@ -28,6 +28,7 @@ const AddProject = ({ addProject }) => {
   });
   const [levelColor, changeLevelColor] = useState("red");
   const [levelTag, changeLevelTag] = useState("");
+  const [isLoading, toggleLoading] = useState(false);
   const handleChange = (e) => {
     e.preventDefault();
     addNewProject({ ...newProject, [e.target.name]: e.target.value });
@@ -69,7 +70,6 @@ const AddProject = ({ addProject }) => {
     // return await res.json();
     // else return false
     try { const user = await database.projects.add(project);
-
       project.id = user.id;
       return project;
 }catch (err) {
@@ -79,6 +79,7 @@ const AddProject = ({ addProject }) => {
   };
 
   const handleAddProject = async (event) => {
+    toggleLoading(true);
     event.preventDefault();
     if (newProject.projectName.length <= 3)
       alert("Project name cannot be empty");
@@ -105,6 +106,7 @@ const AddProject = ({ addProject }) => {
         history.push("/");
       }
     }
+    toggleLoading(false);
   };
   const displayLabelColors = labelColors.map((color) => (
     <LabelColor
@@ -154,7 +156,8 @@ const AddProject = ({ addProject }) => {
             </div>
             <button
               onClick={handleLabelAdd}
-              className="rounded py-2 px-4 bg-green-600"
+              className={`rounded py-2 px-4 bg-green-600 ${isLoading ? "cursor-not-allowed opacity-50" : null}`}
+              disabled={isLoading}
             >
               Add
             </button>
@@ -163,11 +166,11 @@ const AddProject = ({ addProject }) => {
             {displayLabels}
           </div>
           <button
-            className="rounded py-2 px-4 bg-indigo-600"
+            className={`rounded py-2 px-4 bg-indigo-600 ${isLoading ? "cursor-not-allowed opacity-50" : null}`}
             onClick={handleAddProject}
-            type="submit"
+            type="submit" 
+            disabled={isLoading}
           >
-            {" "}
             Add Project
           </button>
         </form>
