@@ -3,6 +3,8 @@ import { MdCheck } from "react-icons/md";
 import labelColors from "../Data/labelColors";
 import DummyProgressLevel from "./DummyProgressLevel";
 import {useHistory} from "react-router-dom";
+import {useAuth } from "../Context/AuthContext";
+import {database} from "../firebase"
 const LabelColor = ({ id, handleLabelColor, active }) => {
   return (
     <div>
@@ -18,6 +20,7 @@ const LabelColor = ({ id, handleLabelColor, active }) => {
 };
 
 const AddProject = ({ addProject }) => {
+  const {currentUser } = useAuth();
   const history = useHistory();
   const [newProject, addNewProject] = useState({
     projectName: "",
@@ -58,13 +61,21 @@ const AddProject = ({ addProject }) => {
     changeLevelColor(event.target.id);
   };
   const submitForm = async (project) => {
-    const res = await fetch("http://localhost:5000/posts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(project),
-    });
-    return await res.json();
+    // const res = await fetch("http://localhost:5000/posts", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(project),
+    // });
+    // return await res.json();
     // else return false
+    try { const user = await database.projects.add(project);
+
+      project.id = user.id;
+      return project;
+}catch (err) {
+      console.log(err);
+    }
+
   };
 
   const handleAddProject = async (event) => {
@@ -77,8 +88,9 @@ const AddProject = ({ addProject }) => {
       const project = {
         ...newProject,
         tasks: [],
-        uid: "74yf93uh4f79gh97chb3947fg",
-        accessCode: "weiryg34",
+        uid: currentUser.uid,
+        // accessCode: "weiryg34",
+         createdAt: database.getCurrentTimestamp(),
       };
       const responseProject = await submitForm(project)
       if (responseProject) {
@@ -87,6 +99,10 @@ const AddProject = ({ addProject }) => {
         changeLevelTag("");
         addProject(responseProject);
         history.push(`/${responseProject.id}`);
+      }
+      else {
+        alert("error adding project");
+        history.push("/");
       }
     }
   };

@@ -30,6 +30,7 @@ function SignInPage() {
     }
     return (
         <div className="h-full">
+            <Navbar/>
             <div className="flex flex-row justify-center items-centered">
                 <button className="rounded py-2 px-4 m-16 bg-blue-500" onClick={handleGoogleSignIn}>SignInWithGoogle</button>
             </div>

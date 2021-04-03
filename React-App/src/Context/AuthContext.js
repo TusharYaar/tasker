@@ -14,8 +14,6 @@ export function AuthProvider({children}) {
     }
     const signup = (email,password) => {
         return auth.createUserWithEmailAndPassword(email,password);
-
-
     }
     
     const signOut=() => {

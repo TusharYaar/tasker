@@ -15,5 +15,11 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 export const auth = firebase.auth();
+const firestore = firebase.firestore();
+export const database = {
+  projects: firestore.collection('projects'),
+  getCurrentTimestamp: firebase.firestore.FieldValue.serverTimestamp
+}
+console.log();
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
 export default firebaseConfig;

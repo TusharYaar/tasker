@@ -2,29 +2,38 @@ import { useState, useEffect } from "react";
 import Sidebar from "./SidebarComponent";
 import Navbar from "./NavbarComponent";
 import ProjectDetails from "./ProjectDetailsComponent";
-import SignInPage from "./SignInPage";
 import { Switch, Route, Redirect } from "react-router-dom";
 import AddProject from "./AddProject";
+import UpdateProfile from "./UpdateProfile";
 import {useAuth} from "../Context/AuthContext";
-
+import {database} from "../firebase"
 const Home = () => {
-  const {currentUser} = useAuth;
+  const {currentUser} = useAuth();
   const [projects, updateProject] = useState([]);
   const [sortTask, updateSort] = useState(null);
+  const [sidebarVisible,updateSidebar] = useState(false);
 
   useEffect(() => {
     const getProjects = async () => {
       const data = await fetchProjects();
-      updateProject(data);
+      if(data)
+     updateProject(data);
     };
     getProjects();
   }, []);
-
   const fetchProjects = async () => {
-    const response = await fetch("http://localhost:5000/posts");
-    const data = await response.json();
-    console.log(data);
-    return data;
+    try {
+    const querySnapshot = await database.projects.where("uid","==",currentUser.uid).get();
+    const projects = [];
+      querySnapshot.forEach((doc) => {
+        let project =  doc.data();
+        project.id = doc.id;
+        projects.push(project);
+            });
+    return projects;
+} catch (err) {
+  console.log(err);
+}
   };
   const addProject = (project) => {
     updateProject([...projects,project]);
@@ -70,11 +79,16 @@ const Home = () => {
     });
     updateProject(newArr);
   };
+  const toggleSidebar = () => {
+    updateSidebar(!sidebarVisible);
+  }
   return (
     <div className="h-full">
-      <Navbar />
+      <Navbar toggleSidebar={toggleSidebar}/>
       <div className="flex flex-row h-full">
         <Sidebar
+          sidebarVisible={sidebarVisible}
+          toggleSidebar={toggleSidebar}
           projects={projects.map((project) => {
             return {
               id: project.id,
@@ -83,8 +97,8 @@ const Home = () => {
           })}
         />
         <Switch>
-          <Route path="/login" component={SignInPage} />
-          <Route exact={true} path="/addproject" render={ ({history}) => <AddProject addProject={addProject} />} />
+          <Route exact={true} path="/addproject" render={ () => <AddProject addProject={addProject} />} />
+          <Route exact={true} path="/updateprofile"component={UpdateProfile}/>
           <Route
             exact={true}
             path="/:id"
