@@ -1,24 +1,9 @@
 import { useState } from "react";
-import { MdCheck } from "react-icons/md";
-import labelColors from "../Data/labelColors";
 import DummyProgressLevel from "./DummyProgressLevel";
+import AllLevelColors from "./AllLevelColors";
 import {useHistory} from "react-router-dom";
 import {useAuth } from "../Context/AuthContext";
-import {database} from "../firebase"
-const LabelColor = ({ id, handleLabelColor, active }) => {
-  return (
-    <div>
-      <button
-        className={`bg-${id}-400 p-3 rounded-full h-10 w-10 mx-2`}
-        id={id}
-        onClick={handleLabelColor}
-      >
-        {active === id ? <MdCheck /> : null}
-      </button>
-    </div>
-  );
-};
-
+import {database} from "../firebase";
 const AddProject = ({ addProject }) => {
   const {currentUser } = useAuth();
   const history = useHistory();
@@ -51,7 +36,7 @@ const AddProject = ({ addProject }) => {
       levelTag: levelTag,
       color: levelColor,
     };
-    if (levelTag.length > 3)
+    if (levelTag.length >= 3)
       addNewProject({
         ...newProject,
         progressLevels: [...newProject.progressLevels, newProgressLevel],
@@ -62,13 +47,6 @@ const AddProject = ({ addProject }) => {
     changeLevelColor(event.target.id);
   };
   const submitForm = async (project) => {
-    // const res = await fetch("http://localhost:5000/posts", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(project),
-    // });
-    // return await res.json();
-    // else return false
     try { const user = await database.projects.add(project);
       project.id = user.id;
       return project;
@@ -90,7 +68,6 @@ const AddProject = ({ addProject }) => {
         ...newProject,
         tasks: [],
         uid: currentUser.uid,
-        // accessCode: "weiryg34",
          createdAt: database.getCurrentTimestamp(),
       };
       const responseProject = await submitForm(project)
@@ -108,14 +85,6 @@ const AddProject = ({ addProject }) => {
     }
     toggleLoading(false);
   };
-  const displayLabelColors = labelColors.map((color) => (
-    <LabelColor
-      key={color}
-      id={color}
-      handleLabelColor={handleLabelColor}
-      active={levelColor}
-    />
-  ));
   const displayLabels = newProject.progressLevels.map((progress, index) => (
     <DummyProgressLevel
       deleteLevel={handleLabelDelete}
@@ -125,7 +94,7 @@ const AddProject = ({ addProject }) => {
     />
   ));
   return (
-    <div className="p-4 w-full">
+    <div className="p-2 md:p-4 w-full">
       <h2 className="text-4xl">Add A Project</h2>
       <div className="flex flex-col">
         <form>
@@ -141,9 +110,9 @@ const AddProject = ({ addProject }) => {
           </div>
 
           <div className="flex flex-col md:flex-row items-center border p-4 my-2">
-            <div className="flex flex-row items-center">
-              {displayLabelColors}
-            </div>
+  
+              <AllLevelColors  handleLabelColor={handleLabelColor} active={levelColor}/>
+      
             <div>
               <label htmlFor="labelName">Label: </label>{" "}
               <input

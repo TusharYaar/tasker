@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Sidebar from "./SidebarComponent";
 import Navbar from "./NavbarComponent";
 import ProjectDetails from "./ProjectDetailsComponent";
+import SettingsPage from "./SettingsPage";
 import { Switch, Route, Redirect } from "react-router-dom";
 import AddProject from "./AddProject";
 import UpdateProfile from "./UpdateProfile";
@@ -53,14 +54,16 @@ const Home = () => {
     updateSort(value);
   };
 
-  const deleteTask = (project, id,task,progress) => {
+  const deleteTask = async (project, id,task,progress) => {
+    toggleTaskLoading(true);
     const currentProject = database.projects.doc(project);
     const taskToDel = {
       progress: progress,
       taskName: task,
       taskID: id,
     }
-    currentProject.update({tasks: database.arrayRemove(taskToDel)})
+    try {
+    await currentProject.update({tasks: database.arrayRemove(taskToDel)});
     const nArr = projects.map((pro) => {
       if (pro.id === project) {
         return {
@@ -69,9 +72,12 @@ const Home = () => {
         };
       } else return pro;
     });
-    updateProject(nArr);
+    updateProject(nArr); }
+    catch (err) { console.log(err);}
+    toggleTaskLoading(false);
   };
   const addTask = async (project, task) => {
+    toggleTaskLoading(true);
     const pID = projects.findIndex((pro) => pro.id === project);
     const newTask = {
       taskID: cuid.slug(),
@@ -92,6 +98,7 @@ const Home = () => {
     });
     updateProject(newArr);}
     catch (err) {alert("error")}
+    toggleTaskLoading(false);
   };
   const toggleSidebar = () => {
     updateSidebar(!sidebarVisible);
@@ -134,8 +141,17 @@ const Home = () => {
               );
               else return <Redirect to={"/"} />
             }}
+
           ></Route>
-        </Switch>
+          <Route path="/:id/settings" exact={true} render={({match})=> {
+             const data = projects.filter(
+              (project) => project.id === match.params.id
+            )[0];
+            if(data)
+            return <SettingsPage data={data} isTaskLoading={isTaskLoading}/>
+            else return <Redirect to="/" />
+          }}/>
+          </Switch>
       </div>
     </div>
   );

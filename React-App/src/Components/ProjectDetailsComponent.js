@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Task from "./TaskComponent";
 import ProgressLevels from "./ProgressLevels";
+import {MdSettings} from "react-icons/md";
+import {Link} from "react-router-dom";
 const ProjectDetails = ({
   data,
   updateTaskProgress,
@@ -41,11 +43,12 @@ const ProjectDetails = ({
       />
     ));
   return (
-    <div className="p-5 flex-col flex justify-start w-full">
-      <div className="flex-row flex justify-between items-center my-4">
+    <div className="p-4 flex-col flex justify-start w-full">
+      <div className="flex-row flex justify-between items-center my-2">
         <div className="flex-row flex justify-around items-end">
           <h2 className="text-6xl m-4 ">{data.projectName}</h2>
-          <h6 className="text-xl italic my-4">{data.accessCode}</h6>
+          <Link to={`/${data.id}/settings`}><button className={`rounded my-4 p-2 bg-gray-100`} disabled={isTaskLoading}><MdSettings /></button></Link>
+          {/* <h6 className="text-xl italic my-4">{data}</h6> */}
         </div>
         <div className="flex flex-row items-end">
           <input className="text-lg border-2 bg-gray-200 focus:border-indigo-600 rounded py-1 px-2" value={newTask} onChange={handleNewTask} />
