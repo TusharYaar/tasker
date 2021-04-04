@@ -4,7 +4,7 @@
 React-App/node_modules
 React-App/.pnp
 React-App/.pnp.js
-
+React-App/.env
 # testing
 React-App/coverage
 
