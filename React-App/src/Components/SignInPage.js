@@ -3,10 +3,10 @@ import Navbar from "./NavbarComponent";
 import { useAuth } from "../Context/AuthContext";
 import { useHistory, Link } from "react-router-dom";
 import GoogleButton from "react-google-button";
-
+import GithubButton from 'react-github-login-button'
 function SignInPage() {
   const history = useHistory();
-  const { signupWithEmail, loginWithEmail, signInWithGoogle } = useAuth();
+  const { signupWithEmail, loginWithEmail, signInWithGoogle,signInWithGithub } = useAuth();
   const [isLoading, setLoading] = useState(false);
   const [loginMethod, toggleLoginMethod] = useState("Login");
   const [email, updateEmail] = useState("");
@@ -80,12 +80,27 @@ function SignInPage() {
     }
   };
   const handleGoogleSignIn = async (event) => {
+    setLoading(true);
     event.preventDefault();
     try {
       await signInWithGoogle();
       history.push("/");
-    } catch {
-      console.log("Eocountered and Error");
+    } catch (err){
+      console.log("Encountered and Error");
+      setErrorMessage(err.message)
+      setLoading(false);
+    }
+  }; 
+   const handleGithubSignIn = async (event) => {
+    setLoading(true);
+    event.preventDefault();
+    try {
+      await signInWithGithub();
+      history.push("/");
+    } catch (err){
+      console.log("Encountered and Error");
+      setErrorMessage(err.message)
+      setLoading(false);
     }
   };
   return (
@@ -167,7 +182,11 @@ function SignInPage() {
               onClick={handleGoogleSignIn}
               className="my-4"
               disabled={isLoading}
-            />
+            />            <GithubButton
+            onClick={handleGithubSignIn}
+            className="my-4"
+            disabled={isLoading}
+          />
           </div>
         </div>
       </div>

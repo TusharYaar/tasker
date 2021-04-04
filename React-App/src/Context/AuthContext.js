@@ -1,5 +1,5 @@
 import React, { useContext, useState,useEffect} from 'react';
-import {auth,googleProvider} from "../firebase";
+import {auth,googleProvider,githubProvider} from "../firebase";
 
 const AuthContext = React.createContext();
 
@@ -11,6 +11,9 @@ export function AuthProvider({children}) {
     const [currentUser,setCurrentUser] = useState(null);
     const signInWithGoogle = () => {
         return auth.signInWithPopup(googleProvider);   
+    }
+    const signInWithGithub = () => {
+        return auth.signInWithPopup(githubProvider);
     }
     const signupWithEmail = (email,password) => {
         return auth.createUserWithEmailAndPassword(email,password);
@@ -28,7 +31,7 @@ export function AuthProvider({children}) {
         return unsubscribe;
 
     },[]);
-    const value = {currentUser,signupWithEmail, loginWithEmail,signInWithGoogle,signOut}
+    const value = {currentUser,signupWithEmail, loginWithEmail,signInWithGoogle,signInWithGithub,signOut}
     return (
         <AuthContext.Provider value={value}>
             {children}
