@@ -39,6 +39,10 @@ const Home = () => {
   const addProject = (project) => {
     updateProject([...projects,project]);
   }
+  const deleteProject = (project) => {
+    updateProject(projects.filter(pro => pro.id!==project))
+    return projects[0].id;
+  }
   const updateTaskProgress = async (project, id, value) => {
     toggleTaskLoading(true);
     try {
@@ -159,7 +163,7 @@ updateProject(newProjects);
               (project) => project.id === match.params.id
             )[0];
             if(data)
-            return <SettingsPage data={data} isTaskLoading={isTaskLoading} updateProjectSettings={updateProjectSettings} sidebarVisible={sidebarVisible}/>
+            return <SettingsPage data={data} isTaskLoading={isTaskLoading} updateProjectSettings={updateProjectSettings} sidebarVisible={sidebarVisible} deleteProject={deleteProject}/>
             else return <Redirect to="/" />
           }}/>
           </Switch>

@@ -47,7 +47,7 @@ const ProjectDetails = ({
     <div className={`p-2 md:p-4 flex-col flex justify-start w-full mt-16 ${ sidebarVisible ? "ml-52" : "ml-0" }  transition-all duration-500 md:ml-60`}>
       <div className="flex-col md:flex-row flex justify-between md:items-center items-start">
         <div className="flex-row flex justify-start  items-end">
-          <h2 className="text-5xl lg:text-6xl m-2">{data.projectName}</h2>
+          <h2 className="text-5xl lg:text-6xl m-2 italic">{data.projectName}</h2>
           <Link to={`/${data.id}/settings`}><button className={`rounded my-4 p-2 bg-gray-100`} disabled={isTaskLoading}><MdSettings /></button></Link>
           {/* <h6 className="text-xl italic my-4">{data}</h6> */}
         </div>
