@@ -169,7 +169,7 @@ function SignInPage() {
                     {loginMethod}
                   </button>
                   <button onClick={handleLoginToggle} disabled={isLoading}>
-                    Not A user yet..?Chick Here
+                    {loginMethod ==="Login" ? "Not A user yet..?Click Here" : "Already have an account..?Click Here "}
                   </button>
                   </div>
                 </div>

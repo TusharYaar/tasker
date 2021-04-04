@@ -25,13 +25,16 @@ export function AuthProvider({children}) {
     const signOut=() => {
         return auth.signOut();
     }   
+    const forgotPassword = (email) => {
+        return auth.sendPasswordResetEmail(email);
+    }
 
     useEffect (()=>{
         const unsubscribe = auth.onAuthStateChanged(user => setCurrentUser(user));
         return unsubscribe;
 
     },[]);
-    const value = {currentUser,signupWithEmail, loginWithEmail,signInWithGoogle,signInWithGithub,signOut}
+    const value = {currentUser,signupWithEmail, loginWithEmail,signInWithGoogle,signInWithGithub,signOut, forgotPassword}
     return (
         <AuthContext.Provider value={value}>
             {children}
