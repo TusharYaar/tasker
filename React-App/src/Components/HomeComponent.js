@@ -103,6 +103,11 @@ const Home = () => {
   const toggleSidebar = () => {
     updateSidebar(!sidebarVisible);
   }
+  const updateProjectSettings = (project,id) => {
+  const newProjects = projects.map(pro => {if(pro.id===id)return {...project,id: id}
+else return pro});
+updateProject(newProjects);
+}
   return (
     <div className="h-full">
       <Navbar toggleSidebar={toggleSidebar}/>
@@ -148,7 +153,7 @@ const Home = () => {
               (project) => project.id === match.params.id
             )[0];
             if(data)
-            return <SettingsPage data={data} isTaskLoading={isTaskLoading}/>
+            return <SettingsPage data={data} isTaskLoading={isTaskLoading} updateProjectSettings={updateProjectSettings}/>
             else return <Redirect to="/" />
           }}/>
           </Switch>
