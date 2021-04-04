@@ -49,7 +49,6 @@ const Home = () => {
         task.progress += value;
       return task;
     });
-    // console.log(updatedTasks)
     await database.projects.doc(project).update({tasks: updatedTasks});
     updateProject(newArr);
     }catch(err){

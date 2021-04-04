@@ -2,9 +2,7 @@ import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import logo from "../logo.png";
 import { MdAdd } from "react-icons/md";
-// import {useAuth } from "../Context/AuthContext"
 const Sidebar = ({ projects ,sidebarVisible}) => {
-  // const {currentUser} = useAuth();
   const projectLinks = projects.map((project) => {
     return (
       <NavLink
