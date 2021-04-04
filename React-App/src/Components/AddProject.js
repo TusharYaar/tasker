@@ -34,7 +34,7 @@ const AddProject = ({ addProject }) => {
     e.preventDefault();
     const newProgressLevel = {
       levelTag: levelTag,
-      color: levelColor,
+      colorId: levelColor,
     };
     if (levelTag.length >= 3)
       addNewProject({
@@ -89,7 +89,7 @@ const AddProject = ({ addProject }) => {
     <DummyProgressLevel
       deleteLevel={handleLabelDelete}
       key={index}
-      color={progress.color}
+      id={progress.colorId}
       tag={progress.levelTag}
     />
   ));

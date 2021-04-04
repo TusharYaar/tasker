@@ -1,7 +1,7 @@
 import ProgressLevel from './ProgressLevel';
 const ProgressLevels = ({ levels,handleSort,sortTask }) => {
   const allBtn = {
-    color: "indigo",
+    colorId: "indigo",
     levelTag: "All"
   }
   const allLevels = levels.map((level, index) => (

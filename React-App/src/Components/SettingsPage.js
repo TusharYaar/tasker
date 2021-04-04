@@ -24,7 +24,7 @@ function SettingsPage({ data, updateProjectSettings }) {
           ...project.progressLevels,
           {
             levelTag: levelTag,
-            color: levelColor,
+            colorId: levelColor,
           },
         ],
       });
@@ -42,7 +42,7 @@ function SettingsPage({ data, updateProjectSettings }) {
     <DummyProgressLevel
       deleteLevel={handleLabelDelete}
       key={index}
-      color={progress.color}
+      id={progress.colorId}
       tag={progress.levelTag}
     />
   ));

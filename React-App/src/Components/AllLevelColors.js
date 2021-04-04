@@ -2,13 +2,13 @@
   import React from 'react';
   import { MdCheck } from "react-icons/md";
   import labelColors from "../Data/labelColors";
-const LabelColor = ({ id, handleLabelColor, active }) => {
+const LabelColor = ({ id, handleLabelColor, active,color,ring }) => {
     return (
       <div>
         <button
-          className={`bg-${id}-400 p-3 rounded-full h-10 w-10 mx-2`}
+          className={`${color} p-3 rounded-full h-10 w-10 mx-2 ${active ===id ? ring + " ring-4 ring-opacity-50" : ""}`}
           id={id}
-          onClick={handleLabelColor}        >
+          onClick={handleLabelColor}>
           {active === id ? <MdCheck /> : null}
         </button>
       </div>
@@ -19,8 +19,10 @@ const LabelColor = ({ id, handleLabelColor, active }) => {
   function AllLevelColors({handleLabelColor, active}) {
     const allColors = labelColors.map((color) => (
         <LabelColor
-          key={color}
-          id={color}
+          key={color.id}
+          id={color.id}
+          color={color.color}
+          ring={color.ring}
           handleLabelColor={handleLabelColor}
           active={active}
         />
