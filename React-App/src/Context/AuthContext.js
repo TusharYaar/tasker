@@ -31,12 +31,15 @@ export function AuthProvider({children}) {
     const updateEmail = (email) => {
         return auth.currentUser.updateEmail(email);
     }
+    const deleteUser = () => {
+        return auth.currentUser.delete();
+    }
     useEffect (()=>{
         const unsubscribe = auth.onAuthStateChanged(user => setCurrentUser(user));
         return unsubscribe;
 
     },[]);
-    const value = {currentUser,signupWithEmail, loginWithEmail,signInWithGoogle,signInWithGithub,signOut, forgotPassword,updateEmail,setCurrentUser}
+    const value = {currentUser,signupWithEmail, loginWithEmail,signInWithGoogle,signInWithGithub,signOut, forgotPassword,updateEmail,setCurrentUser, deleteUser}
     return (
         <AuthContext.Provider value={value}>
             {children}

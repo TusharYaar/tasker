@@ -165,7 +165,7 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject
       <div className="border p-4 my-2 md:my-4 flex-col flex items-start">
         <h3 className="text-3xl my-2">Unsafe Area</h3>
         <p className="text">Done with the Project and don't want it to take that space in the sidebar, reminding you that you never actually finished the project and you are just deleting it so that you can tell your self you finished the project.
-          Is it so...., then go ahead... <span className="font-bold block my-2">But remember this process is irreversible.</span>
+          Is it so...., then go ahead... <span className="font-bold block my-2">But remember, this process is irreversible.</span>
           Type the name of the project in the Input</p>
           <input className="px-4 py-2 my-1 border-2 rounded border-gray-400" value={deleteInput} onChange={handleDelInput} />
       <button className={`bg-red-300 text-red-600 py-2 px-4 my-2 rounded border-red-500 border-2 ${deleteInput===data.projectName ? "" : "cursor-not-allowed opacity-50"}`} disabled={!deleteInput===data.projectName} onClick={handleDeleteProject}>Delete Project</button>
