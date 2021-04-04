@@ -10,7 +10,8 @@ const ProjectDetails = ({
   sortTask,
   handleSort,
   addTask,
-  isTaskLoading
+  isTaskLoading,
+  sidebarVisible
 }) => {
   const [newTask, addNewTask] = useState("");
   const handleNewTask = (event) => {
@@ -43,17 +44,17 @@ const ProjectDetails = ({
       />
     ));
   return (
-    <div className="p-4 flex-col flex justify-start w-full">
-      <div className="flex-row flex justify-between items-center my-2">
-        <div className="flex-row flex justify-around items-end">
-          <h2 className="text-6xl m-4 ">{data.projectName}</h2>
+    <div className={`p-2 md:p-4 flex-col flex justify-start w-full mt-16 ${ sidebarVisible ? "ml-52" : "ml-0" }  transition-all duration-500 md:ml-60`}>
+      <div className="flex-col md:flex-row flex justify-between md:items-center items-start">
+        <div className="flex-row flex justify-start  items-end">
+          <h2 className="text-5xl lg:text-6xl m-2">{data.projectName}</h2>
           <Link to={`/${data.id}/settings`}><button className={`rounded my-4 p-2 bg-gray-100`} disabled={isTaskLoading}><MdSettings /></button></Link>
           {/* <h6 className="text-xl italic my-4">{data}</h6> */}
         </div>
-        <div className="flex flex-row items-end">
-          <input className="text-lg border-2 bg-gray-200 focus:border-indigo-600 rounded py-1 px-2" value={newTask} onChange={handleNewTask} />
+        <div className="flex flex-row items-end flex-wrap justify-end">
+          <input className="text-lg border-2 bg-gray-200 focus:border-indigo-600 rounded mx-2 px-2 py-2" value={newTask} onChange={handleNewTask} />
         <button
-          className={`bg-gray-300 text-base px-4 py-2 rounded mx-4 ${isTaskLoading ? "cursor-not-allowed opacity-50" : null}`}
+          className={`bg-gray-300 text-base px-4 py-2 rounded mx-2 my-2 ${isTaskLoading ? "cursor-not-allowed opacity-50" : null}`}
           onClick={submitNewTask}
           disabled={isTaskLoading}
         >

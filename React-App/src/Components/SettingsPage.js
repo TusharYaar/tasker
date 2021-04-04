@@ -3,7 +3,7 @@ import AllLevelColors from "./AllLevelColors";
 import DummyProgressLevel from "./DummyProgressLevel";
 import { useHistory } from "react-router-dom";
 import { database } from "../firebase";
-function SettingsPage({ data, updateProjectSettings }) {
+function SettingsPage({ data, updateProjectSettings,sidebarVisible }) {
   const [project, alterProject] = useState(data);
   const [levelColor, changeLevelColor] = useState("red");
   const [levelTag, changeLevelTag] = useState("");
@@ -90,7 +90,7 @@ function SettingsPage({ data, updateProjectSettings }) {
     history.push(`/${id}`);
   };
   return (
-    <div className="p-2 md:p-4 w-full">
+    <div className={`p-2 md:p-4 w-full mt-16 ${ sidebarVisible ? "ml-52" : "ml-0" }  transition-all duration-500 md:ml-60`}>
       <h2 className="text-4xl">Edit {data.projectName}</h2>
       <div className="flex flex-col">
         <form>
@@ -105,7 +105,7 @@ function SettingsPage({ data, updateProjectSettings }) {
             />
           </div>
 
-          <div className="flex flex-col md:flex-row items-center border p-4 my-2">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center border p-4 my-2">
             <div className="flex flex-row items-center">
               <AllLevelColors
                 handleLabelColor={handleLabelColor}

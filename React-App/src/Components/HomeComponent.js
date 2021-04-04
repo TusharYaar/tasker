@@ -3,7 +3,7 @@ import Sidebar from "./SidebarComponent";
 import Navbar from "./NavbarComponent";
 import ProjectDetails from "./ProjectDetailsComponent";
 import SettingsPage from "./SettingsPage";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 import AddProject from "./AddProject";
 import UpdateProfile from "./UpdateProfile";
 import {useAuth} from "../Context/AuthContext";
@@ -11,6 +11,7 @@ import {database} from "../firebase";
 import cuid from 'cuid';
 const Home = () => {
   const {currentUser} = useAuth();
+  const history = useHistory();
   const [projects, updateProject] = useState([]);
   const [sortTask, updateSort] = useState(null);
   const [sidebarVisible,updateSidebar] = useState(false);
@@ -25,8 +26,10 @@ const Home = () => {
         project.id = doc.id;
         projects.push(project);
             });
-      if(projects)
-     updateProject(projects);}
+      if(projects) {
+     updateProject(projects);
+     history.push(`/${projects[0].id}`)
+      }}
      catch(err) {
        console.log(err);
      }
@@ -40,10 +43,14 @@ const Home = () => {
     toggleTaskLoading(true);
     try {
     const pIndex = projects.findIndex((pro) => pro.id === project);
-    const tIndex = projects[pIndex].tasks.findIndex((task) => task.taskID === id);
     var newArr = [...projects];
-    const updatedTask = {...projects[pIndex].tasks[tIndex],progress:projects[pIndex].tasks[tIndex].progress += value };
-    await database.projects.doc(project).set({tasks:[updatedTask]},{merge:true});
+    const updatedTasks = projects[pIndex].tasks.map((task) => {
+      if(task.taskID === id)
+        task.progress += value;
+      return task;
+    });
+    // console.log(updatedTasks)
+    await database.projects.doc(project).update({tasks: updatedTasks});
     updateProject(newArr);
     }catch(err){
       console.log(err);
@@ -114,7 +121,6 @@ updateProject(newProjects);
       <div className="flex flex-row h-full">
         <Sidebar
           sidebarVisible={sidebarVisible}
-          toggleSidebar={toggleSidebar}
           projects={projects.map((project) => {
             return {
               id: project.id,
@@ -123,8 +129,8 @@ updateProject(newProjects);
           })}
         />
         <Switch>
-          <Route exact={true} path="/addproject" render={ () => <AddProject addProject={addProject} />} />
-          <Route exact={true} path="/updateprofile"component={UpdateProfile}/>
+          <Route exact={true} path="/addproject" render={ () => <AddProject addProject={addProject} sidebarVisible={sidebarVisible}/>} />
+          <Route exact={true} path="/updateprofile" render={ () => <UpdateProfile sidebarVisible={sidebarVisible}/>}/>
           <Route
             exact={true}
             path="/:id"
@@ -142,6 +148,7 @@ updateProject(newProjects);
                   handleSort={handleSort}
                   addTask={addTask}
                   isTaskLoading={isTaskLoading}
+                  sidebarVisible={sidebarVisible}
                 />
               );
               else return <Redirect to={"/"} />
@@ -153,7 +160,7 @@ updateProject(newProjects);
               (project) => project.id === match.params.id
             )[0];
             if(data)
-            return <SettingsPage data={data} isTaskLoading={isTaskLoading} updateProjectSettings={updateProjectSettings}/>
+            return <SettingsPage data={data} isTaskLoading={isTaskLoading} updateProjectSettings={updateProjectSettings} sidebarVisible={sidebarVisible}/>
             else return <Redirect to="/" />
           }}/>
           </Switch>

@@ -1,9 +1,11 @@
-import React from 'react'
+import React from 'react';
+import Navbar from "./NavbarComponent";
 
 function About() {
     return (
-        <div className="w-full p-4">
-            <h2 className="text-4xl">About</h2>
+        <div className="w-full">
+            <Navbar/>
+            <h2 className="text-4xl mt-16">About</h2>
         </div>
     )
 }

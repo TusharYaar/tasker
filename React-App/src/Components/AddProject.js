@@ -4,7 +4,8 @@ import AllLevelColors from "./AllLevelColors";
 import {useHistory} from "react-router-dom";
 import {useAuth } from "../Context/AuthContext";
 import {database} from "../firebase";
-const AddProject = ({ addProject }) => {
+
+const AddProject = ({ addProject,sidebarVisible }) => {
   const {currentUser } = useAuth();
   const history = useHistory();
   const [newProject, addNewProject] = useState({
@@ -94,7 +95,7 @@ const AddProject = ({ addProject }) => {
     />
   ));
   return (
-    <div className="p-2 md:p-4 w-full">
+    <div className={`p-2 md:p-4 w-full mt-16 ${ sidebarVisible ? "ml-52" : "ml-0" }  transition-all duration-500 md:ml-60`}>
       <h2 className="text-4xl">Add A Project</h2>
       <div className="flex flex-col">
         <form>
@@ -109,7 +110,7 @@ const AddProject = ({ addProject }) => {
             />
           </div>
 
-          <div className="flex flex-col md:flex-row items-center border p-4 my-2">
+          <div className="flex flex-col lg:flex-row lg:items-center items-start border p-4 my-2">
   
               <AllLevelColors  handleLabelColor={handleLabelColor} active={levelColor}/>
       

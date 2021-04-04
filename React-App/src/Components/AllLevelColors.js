@@ -6,7 +6,7 @@ const LabelColor = ({ id, handleLabelColor, active,color,ring }) => {
     return (
       <div>
         <button
-          className={`${color} p-3 rounded-full h-10 w-10 mx-2 ${active ===id ? ring + " ring-4 ring-opacity-50" : ""}`}
+          className={`${color} p-3 rounded-full h-10 w-10 m-2 ${active ===id ? ring + " ring-4 ring-opacity-50" : ""}`}
           id={id}
           onClick={handleLabelColor}>
           {active === id ? <MdCheck /> : null}
@@ -28,7 +28,7 @@ const LabelColor = ({ id, handleLabelColor, active,color,ring }) => {
         />
       ));
       return (
-          <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center flex-wrap">
                 {allColors}   
           </div>
       )

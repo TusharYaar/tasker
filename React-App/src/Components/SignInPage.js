@@ -107,7 +107,7 @@ function SignInPage() {
     <div className="h-full">
       <Navbar displayEvery={true} />
       <div className="flex flex-row justify-center items-centered rounded">
-        <div className="bg-gray-100 p-4 m-4 sm:w-auto w-screen divide-y divide-gray-300 md:w-3/5 xl:w-2/5">
+        <div className="bg-gray-100 p-4 m-4 sm:w-auto w-screen divide-y divide-gray-300 md:w-3/5 xl:w-2/5 mt-20">
           <div className="">
             <h2 className="text-4xl">{loginMethod}</h2>
             {errorMessage.length > 0 ? <p className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-3 rounded text-center w-full ">{errorMessage}</p> : null}
