@@ -12,8 +12,11 @@ export function AuthProvider({children}) {
     const signInWithGoogle = () => {
         return auth.signInWithPopup(googleProvider);   
     }
-    const signup = (email,password) => {
+    const signupWithEmail = (email,password) => {
         return auth.createUserWithEmailAndPassword(email,password);
+    }
+    const loginWithEmail = (email,password) => {
+        return auth.signInWithEmailAndPassword(email,password);
     }
     
     const signOut=() => {
@@ -25,7 +28,7 @@ export function AuthProvider({children}) {
         return unsubscribe;
 
     },[]);
-    const value = {currentUser,signup,signInWithGoogle,signOut}
+    const value = {currentUser,signupWithEmail, loginWithEmail,signInWithGoogle,signOut}
     return (
         <AuthContext.Provider value={value}>
             {children}
