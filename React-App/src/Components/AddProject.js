@@ -80,10 +80,10 @@ const AddProject = ({ addProject }) => {
       }
       else {
         alert("error adding project");
-        history.push("/");
+        toggleLoading(false);
       }
     }
-    toggleLoading(false);
+
   };
   const displayLabels = newProject.progressLevels.map((progress, index) => (
     <DummyProgressLevel

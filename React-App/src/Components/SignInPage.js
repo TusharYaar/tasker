@@ -177,14 +177,14 @@ function SignInPage() {
             </div>
           </div>
           <hr />
-          <div className="flex flex-col items-center">
+          <div className="flex flex-row items-center flex-wrap justify-around">
             <GoogleButton
               onClick={handleGoogleSignIn}
-              className="my-4"
+              className="my-4 mx-2"
               disabled={isLoading}
             />            <GithubButton
             onClick={handleGithubSignIn}
-            className="my-4"
+            className="my-4 mx-2"
             disabled={isLoading}
           />
           </div>
