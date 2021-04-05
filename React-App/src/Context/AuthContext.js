@@ -34,12 +34,19 @@ export function AuthProvider({children}) {
     const deleteUser = () => {
         return auth.currentUser.delete();
     }
+    const updatePassword = (password) => {
+        return auth.currentUser.updatePassword(password);
+    }
+    const reloginUser = async (credential) => {
+        console.log("called");
+        return auth.currentUser.reauthenticateWithCredential(credential)
+    }
     useEffect (()=>{
         const unsubscribe = auth.onAuthStateChanged(user => setCurrentUser(user));
         return unsubscribe;
 
     },[]);
-    const value = {currentUser,signupWithEmail, loginWithEmail,signInWithGoogle,signInWithGithub,signOut, forgotPassword,updateEmail,setCurrentUser, deleteUser}
+    const value = {currentUser,signupWithEmail, loginWithEmail,signInWithGoogle,signInWithGithub,signOut, forgotPassword,updateEmail,setCurrentUser, deleteUser,updatePassword, reloginUser}
     return (
         <AuthContext.Provider value={value}>
             {children}
