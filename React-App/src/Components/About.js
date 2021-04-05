@@ -3,14 +3,14 @@ import Navbar from "./NavbarComponent";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import { MdKeyboardArrowLeft } from "react-icons/md";
-import { RiGithubFill,RiTwitterLine,RiInstagramLine,RiUser3Line,RiLinkedinBoxLine } from "react-icons/ri";
+import { RiGithubFill,RiTwitterLine,RiInstagramLine,RiUser3Line,RiLinkedinBoxLine,RiHeart3Fill } from "react-icons/ri";
 function About() {
   const { currentUser } = useAuth();
   const history = useHistory();
   return (
     <div className="h-full">
       <Navbar displayEvery={true} />
-      <div className="flex flex-row justify-start items-start rounded p-2 md:p-4">
+      <div className="flex flex-row justify-start flex-wrap items-start rounded p-2 md:p-4">
         <div className="w-full">
           <div className="mt-16">
             {currentUser ? (
@@ -42,25 +42,25 @@ function About() {
               </div>
               <div className="border rounded p-4 my-4 text-lg w-full">
                 <h3 className="text-xl md:text-2xl">Connect With Me</h3>
-                <ul className="flex flex-row items-start my-2">
-                  <a href="https://tusharyaar.netlify.app/" rel="noreferrer noopener">
-                    <li className="px-2 py-1 rounded bg-yellow-300 my-2 shadow-lg italic ">
-                      <RiUser3Line className="text-3xl mr-1 inline" /> Portfolio
+                <ul className="flex flex-row items-start my-2 flex-wrap">
+                  <a href="https://tusharyaar.netlify.app/" rel="noreferrer noopener" className="mr-3">
+                    <li className="px-2 py-1 rounded bg-yellow-300 my-2 shadow-lg italic whitespace-nowrap ">
+                      <RiUser3Line className="text-3xl mr-1 inline" />Portfolio
                     </li>
                   </a>
-                  <a href="https://www.instagram.com/tushar_yaar/" rel="noreferrer noopener" className="mx-3">
-                    <li className="px-2 py-1 rounded bg-pink-300 my-2 shadow-lg italic ">
-                      <RiInstagramLine className="text-3xl mr-1 inline" /> Instagram
+                  <a href="https://www.instagram.com/tushar_yaar/" rel="noreferrer noopener" className="mr-3">
+                    <li className="px-2 py-1 rounded bg-pink-300 my-2 shadow-lg italic whitespace-nowrap ">
+                      <RiInstagramLine className="text-3xl mr-1 inline" />Instagram
                     </li>
                   </a>
                   <a href="https://twitter.com/tushar_yaar" rel="noreferrer noopener" className="mr-3">
-                    <li className="px-2 py-1 rounded bg-blue-300 my-2 shadow-lg italic ">
-                      <RiTwitterLine className="text-3xl mr-1 inline" /> Twitter
+                    <li className="px-2 py-1 rounded bg-blue-300 my-2 shadow-lg italic whitespace-nowrap ">
+                      <RiTwitterLine className="text-3xl mr-1 inline" />Twitter
                     </li>
                   </a>
                   <a href="https://www.linkedin.com/in/tushar-s-agrawal-215ba81a0/" rel="noreferrer noopener" className="mr-3">
-                    <li className="px-2 py-1 rounded bg-indigo-300 my-2 shadow-lg italic ">
-                      <RiLinkedinBoxLine className="text-3xl mr-1 inline" /> LinkedIn
+                    <li className="px-2 py-1 rounded bg-indigo-300 my-2 shadow-lg italic whitespace-nowrap ">
+                      <RiLinkedinBoxLine className="text-3xl mr-1 inline" />LinkedIn
                     </li>
                   </a>
                   {/* <a href="#" rel="noreferrer noopener">
@@ -77,7 +77,7 @@ function About() {
                 <p>
                   The prime reason to build the site was to see what I learnt
                   after completing the raect course(Finally). I also wanted to
-                  use firebase, so here it is, Presenting you Tasker, the app
+                  use firebase, so here it is, Presenting you Arga, the app
                   build with react and Firebase to manage your different Todos
                   for your project.
                 </p>
@@ -108,19 +108,24 @@ function About() {
                     <span className="italic mx-2 bg-yellow-200 py-1 px-2 rounded">
                       Firebase
                     </span>
-                    <span className="text-sm md:text-base">
+                    <span className="text-sm md:text-base ">
                       for Authentication and Storage
                     </span>
                   </li>
                   <li className="my-2">
                     <a href="https://github.com/TusharYaar/tasker/tree/master/React-App" rel="noreferrer noopener">
                     <span className="italic mx-2 bg-gray-200 py-1 px-2 rounded">
-                    <RiGithubFill className="text-3xl mr-1 inline" />  Github
+                    <RiGithubFill className="text-3xl mr-1 inline " />  Github
                     </span>
-                    <span className="text-sm md:text-base">
+                    <span className="text-sm md:text-base ">
                       Find the code here
                     </span>
                     </a>
+                  </li>
+                  <li className="my-4">
+                    <span className="italic mx-2 bg-pink-300 py-1 px-2 rounded">
+                      Made with <RiHeart3Fill className="inline"/> by Tushar
+                    </span>
                   </li>
                 </ul>
               </div>
