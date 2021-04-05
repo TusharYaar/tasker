@@ -107,7 +107,7 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject
   };
   return (
     <div className={`p-2 md:p-4 w-full mt-16 ${ sidebarVisible ? "ml-52" : "ml-0" }  transition-all duration-500 md:ml-60`}>
-      <h2 className="text-4xl">Edit {data.projectName}</h2>
+      <h2 className="text-2xl md:text-3xl lg:text-4xl">Edit {data.projectName}</h2>
       <div className="flex flex-col">
         <form>
           <div className="my-4 text-3xl border p-4">

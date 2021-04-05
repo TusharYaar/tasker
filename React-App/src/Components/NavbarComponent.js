@@ -10,7 +10,7 @@ const Navbar = ({ toggleSidebar,displayEvery }) => {
   return (
     <div className="navbar w-full bg-indigo-600 h-16 py-3 px-3 flex flex-row justify-between fixed z-50">
       <div className="flex">
-        {currentUser ? <button onClick={toggleSidebar}>< MdShortText className="text-2xl md:hidden" /></button>:null}
+        {currentUser && !displayEvery ? <button onClick={toggleSidebar}>< MdShortText className="text-2xl md:hidden" /></button>:null}
         <Link to="/home"><img alt="Site-Logo" className={`${displayEvery ? "inline" : "hidden sm:inline"}`} src={`${logo}`} />{displayEvery ? null: <span className="sm:hidden text-2xl mx-4">Home</span>}</Link>
       </div>
       {currentUser ? <NavbarDropdown /> : null}
