@@ -3,7 +3,8 @@ import Sidebar from "./SidebarComponent";
 import Navbar from "./NavbarComponent";
 import ProjectDetails from "./ProjectDetailsComponent";
 import SettingsPage from "./SettingsPage";
-import { Switch, Route, Redirect, useHistory } from "react-router-dom";
+import DefaultProject from "./DefaultProject";
+import { Switch, Route, Redirect } from "react-router-dom";
 import AddProject from "./AddProject";
 import UpdateProfile from "./UpdateProfile";
 import {useAuth} from "../Context/AuthContext";
@@ -11,7 +12,6 @@ import {database} from "../firebase";
 import cuid from 'cuid';
 const Home = () => {
   const {currentUser} = useAuth();
-  const history = useHistory();
   const [projects, updateProject] = useState([]);
   const [sortTask, updateSort] = useState(null);
   const [sidebarVisible,updateSidebar] = useState(false);
@@ -26,10 +26,9 @@ const Home = () => {
         project.id = doc.id;
         projects.push(project);
             });
-      if(projects) {
+      if(projects.length!==0) 
      updateProject(projects);
-     history.push(`/${projects[0].id}`)
-      }}
+      }
      catch(err) {
        console.log(err);
      }
@@ -134,6 +133,7 @@ updateProject(newProjects);
         <Switch>
           <Route exact={true} path="/addproject" render={ () => <AddProject addProject={addProject} sidebarVisible={sidebarVisible}/>} />
           <Route exact={true} path="/updateprofile" render={ () => <UpdateProfile sidebarVisible={sidebarVisible}/>}/>
+          <Route exact={true} path="/home"  render={ () => <DefaultProject sidebarVisible={sidebarVisible}/>}/>
           <Route
             exact={true}
             path="/:id"
@@ -154,7 +154,7 @@ updateProject(newProjects);
                   sidebarVisible={sidebarVisible}
                 />
               );
-              else return <Redirect to={"/"} />
+              else return <Redirect to={"/default"} />
             }}
 
           ></Route>

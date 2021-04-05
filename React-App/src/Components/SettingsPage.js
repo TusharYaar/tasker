@@ -59,6 +59,7 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject
       key={index}
       id={progress.colorId}
       tag={progress.levelTag}
+      showDelete={true}
     />
   ));
   const handleLabelColor = (event) => {

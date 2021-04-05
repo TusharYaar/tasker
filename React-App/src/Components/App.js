@@ -10,8 +10,8 @@ const App = () => {
   return (
     <div className="App h-screen">
       <Switch>
-    <Route path="/login" >{currentUser ? <Redirect to="/" /> : <SignInPage/>}</Route>
-    <Route path="/forgotpassword" exact={true}> {currentUser ? <Redirect to="/" /> : <ForgotPassword/>}</Route>
+    <Route path="/login" >{currentUser ? <Redirect to="/home" /> : <SignInPage/>}</Route>
+    <Route path="/forgotpassword" exact={true}> {currentUser ? <Redirect to="/home" /> : <ForgotPassword/>}</Route>
 
     <Route path="/about" component={About}/>
     <Route path="/">

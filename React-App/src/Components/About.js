@@ -1,8 +1,8 @@
 import React from "react";
 import Navbar from "./NavbarComponent";
-import { useAuth } from "../Context/AuthContext";
+// import { useAuth } from "../Context/AuthContext";
 function About() {
-  const { currentUser } = useAuth();
+  // const { currentUser } = useAuth();
   return (
     <div className="h-full">
       <Navbar displayEvery={true} />

@@ -92,6 +92,7 @@ const AddProject = ({ addProject,sidebarVisible }) => {
       key={index}
       id={progress.colorId}
       tag={progress.levelTag}
+      showDelete={true}
     />
   ));
   return (
