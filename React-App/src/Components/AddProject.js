@@ -45,11 +45,13 @@ const AddProject = ({ addProject, sidebarVisible, updateSidebar }) => {
       levelTag: levelTag,
       colorId: levelColor,
     };
-    if (levelTag.length >= 3)
-      addNewProject({
+    if (levelTag.length >= 3 && levelTag.length <=10)
+       {addNewProject({
         ...newProject,
         progressLevels: [...newProject.progressLevels, newProgressLevel],
       });
+    return;}
+    setLevelError("Length of label should be between 3 to 10 characters");
   };
   const handleLabelColor = (event) => {
     event.preventDefault();

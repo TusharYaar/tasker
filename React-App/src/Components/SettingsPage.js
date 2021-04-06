@@ -3,12 +3,16 @@ import AllLevelColors from "./AllLevelColors";
 import DummyProgressLevel from "./DummyProgressLevel";
 import { useHistory } from "react-router-dom";
 import { database } from "../firebase";
+import {MdClose} from "react-icons/md";
 function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject,updateSidebar }) {
   const [project, alterProject] = useState(data);
   const [levelColor, changeLevelColor] = useState("red");
   const [levelTag, changeLevelTag] = useState("");
   const [isLoading, toggleLoading] = useState(false);
   const [deleteInput, setInput] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [levelError, setLevelError] = useState("");
+
   const history = useHistory();
   useEffect(() =>{
     updateSidebar(false);
@@ -26,7 +30,8 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject
   const handleDeleteProject = async () => {
     toggleLoading(true);
     const id = project.id;
-    try {await database.projects.doc(id).delete();
+    try {
+      await database.projects.doc(id).delete();
       const nId = deleteProject(id);
       history.push(`/${nId}`)
     }
@@ -37,8 +42,8 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject
   }
   const handleLabelAdd = (e) => {
     e.preventDefault();
-    if (levelTag.length >= 3)
-      alterProject({
+    if (levelTag.length >= 3 && levelTag.length <=10)
+       {alterProject({
         ...project,
         progressLevels: [
           ...project.progressLevels,
@@ -48,6 +53,8 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject
           },
         ],
       });
+    return }
+    setLevelError("Length of label should be between 3 to 10 characters");
   };
   const handleLabelDelete = (event, tag) => {
     event.preventDefault();
@@ -73,11 +80,19 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    if (project.projectName.length <= 3) alert("Project name cannot be empty");
-    else if (project.progressLevels.length < 2)
-      alert("Progress levels should be atlest 2");
-    else {
+      if(project.projectName.length <= 3 || project.projectName.length > 15) {
+        setNameError("Project name should be between 4 to 15 characters long");
+        return;
+      }
+    
+     if (project.progressLevels.length < 2)
+      { 
+        setLevelError("Progress Levels should be greater than 2");
+        return;
+      }
+  
+      setLevelError("");
+      setNameError("");
       if (data.progressLevels.length > project.progressLevels.length) {
         const alterTask = project.tasks.map((task) => {
           if (task.progress >= project.progressLevels.length) {
@@ -92,7 +107,7 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject
 
       }
       handleUpdateProject();
-    }
+    
   };
 
   const handleUpdateProject = async () => {
@@ -126,7 +141,30 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject
               type="text"
             />
           </div>
-
+          {nameError.length > 0 && (
+            <div className="flex flex-row justify-between text-red-600 bg-red-200 my-2 px-4 py-2 rounded">
+              {nameError}{" "}
+              <button
+                onClick={() => {
+                  setNameError("");
+                }}
+              >
+                <MdClose />
+              </button>
+            </div>
+          )}
+          {levelError.length > 0 && (
+            <div className="flex flex-row justify-between text-red-600 bg-red-200 my-2 px-4 py-2 rounded">
+              {levelError}{" "}
+              <button
+                onClick={() => {
+                  setLevelError("");
+                }}
+              >
+                <MdClose />
+              </button>
+            </div>
+          )}
           <div className="flex flex-col lg:flex-row items-start lg:items-center border p-4 my-2">
             <div className="flex flex-row items-center">
               <AllLevelColors

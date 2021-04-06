@@ -1,11 +1,15 @@
-import React from 'react'
+import {useEffect} from 'react'
 import DummyProgressLevel from './DummyProgressLevel';
 import { MdKeyboardArrowUp,MdKeyboardArrowDown,MdClose } from "react-icons/md";
 
-const DefaultProject=({sidebarVisible})=>  {
+const DefaultProject=({sidebarVisible,updateSidebar})=>  {
 const dummyfn = () => {
     
 }
+
+useEffect(() => {
+  updateSidebar(false);
+}, [updateSidebar]);
 const displayLabels = [{colorId:"blue", levelTag:"Level 1"},{colorId:"green", levelTag:"Level 2"},{colorId:"yellow", levelTag:"Level 3"},{colorId:"indigo", levelTag:"All"}].map( (progress,index) =>     <DummyProgressLevel
     deleteLevel={dummyfn}
     key={index}
