@@ -35,6 +35,7 @@ const Home = () => {
     };
     getProjects();
   }, [currentUser.uid]);
+  
   const addProject = (project) => {
     updateProject([...projects,project]);
   }
@@ -131,9 +132,9 @@ updateProject(newProjects);
           })}
         />
         <Switch>
-          <Route exact={true} path="/addproject" render={ () => <AddProject addProject={addProject} sidebarVisible={sidebarVisible}/>} />
-          <Route exact={true} path="/updateprofile" render={ () => <UpdateProfile sidebarVisible={sidebarVisible}/>}/>
-          <Route exact={true} path="/home"  render={ () => <DefaultProject sidebarVisible={sidebarVisible}/>}/>
+          <Route exact={true} path="/addproject" render={ () => <AddProject addProject={addProject} sidebarVisible={sidebarVisible} updateSidebar={updateSidebar}/>} />
+          <Route exact={true} path="/updateprofile" render={ () => <UpdateProfile sidebarVisible={sidebarVisible} updateSidebar={updateSidebar}/>}/>
+          <Route exact={true} path="/home"  render={ () => <DefaultProject sidebarVisible={sidebarVisible} updateSidebar={updateSidebar}/>}/>
           <Route
             exact={true}
             path="/:id"
@@ -152,9 +153,10 @@ updateProject(newProjects);
                   addTask={addTask}
                   isTaskLoading={isTaskLoading}
                   sidebarVisible={sidebarVisible}
+                  updateSidebar={updateSidebar}
                 />
               );
-              else return <Redirect to={"/default"} />
+              else return <Redirect to={"/home"} />
             }}
 
           ></Route>
@@ -163,7 +165,7 @@ updateProject(newProjects);
               (project) => project.id === match.params.id
             )[0];
             if(data)
-            return <SettingsPage data={data} isTaskLoading={isTaskLoading} updateProjectSettings={updateProjectSettings} sidebarVisible={sidebarVisible} deleteProject={deleteProject}/>
+            return <SettingsPage data={data} isTaskLoading={isTaskLoading} updateProjectSettings={updateProjectSettings} sidebarVisible={sidebarVisible} deleteProject={deleteProject} updateSidebar={updateSidebar}/>
             else return <Redirect to="/" />
           }}/>
           </Switch>

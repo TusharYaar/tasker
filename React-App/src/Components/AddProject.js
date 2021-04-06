@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import DummyProgressLevel from "./DummyProgressLevel";
 import AllLevelColors from "./AllLevelColors";
 import {useHistory} from "react-router-dom";
 import {useAuth } from "../Context/AuthContext";
 import {database} from "../firebase";
 
-const AddProject = ({ addProject,sidebarVisible }) => {
+const AddProject = ({ addProject,sidebarVisible,updateSidebar }) => {
   const {currentUser } = useAuth();
   const history = useHistory();
   const [newProject, addNewProject] = useState({
@@ -15,6 +15,12 @@ const AddProject = ({ addProject,sidebarVisible }) => {
   const [levelColor, changeLevelColor] = useState("red");
   const [levelTag, changeLevelTag] = useState("");
   const [isLoading, toggleLoading] = useState(false);
+
+  useEffect(() =>{
+      updateSidebar(false);
+  },[updateSidebar]);
+
+  
   const handleChange = (e) => {
     e.preventDefault();
     addNewProject({ ...newProject, [e.target.name]: e.target.value });
@@ -61,10 +67,14 @@ const AddProject = ({ addProject,sidebarVisible }) => {
     toggleLoading(true);
     event.preventDefault();
     if (newProject.projectName.length <= 3)
-      alert("Project name cannot be empty");
-    else if (newProject.progressLevels.length < 2)
-      alert("Progress levels should be atlest 2");
-    else {
+      {alert("Project name cannot be empty");
+      toggleLoading(false);
+  }
+      else if (newProject.progressLevels.length < 2)
+      {alert("Progress levels should be atlest 2");
+      toggleLoading(false);
+
+}else {
       const project = {
         ...newProject,
         tasks: [],
@@ -79,11 +89,11 @@ const AddProject = ({ addProject,sidebarVisible }) => {
         addProject(responseProject);
         history.push(`/${responseProject.id}`);
       }
-      else {
-        alert("error adding project");
-        toggleLoading(false);
+      else 
+       { alert("error adding project");
+       toggleLoading(false);
       }
-    }
+    }     
 
   };
   const displayLabels = newProject.progressLevels.map((progress, index) => (
@@ -100,12 +110,12 @@ const AddProject = ({ addProject,sidebarVisible }) => {
       <h2 className="text-4xl">Add A Project</h2>
       <div className="flex flex-col">
         <form>
-          <div className="my-4 text-3xl border p-4">
-            <label htmlFor="projectName">Name</label>
+          <div className="my-4 text-3xl border p-2 items-center lg:p-4 flex flex-row flex-wrap justify-start">
+            <label htmlFor="projectName">Name:</label>
             <input
               name="projectName"
               placeholder="Give a name to your project"
-              className="p-4 mx-4 "
+              className="p-2 md:p-4 mx-2 md:mx-4 my-2 border-2 rounded text-lg md:text-2xl"
               onChange={handleChange}
               value={newProject.projectName}
             />
@@ -115,19 +125,19 @@ const AddProject = ({ addProject,sidebarVisible }) => {
   
               <AllLevelColors  handleLabelColor={handleLabelColor} active={levelColor}/>
       
-            <div>
+            <div className="my-2">
               <label htmlFor="labelName">Label: </label>{" "}
               <input
                 name="labelName"
                 placeholder="e.g. Initialzied"
                 onChange={handleLevelTag}
-                className="rounded py-2 px-4 mx-2"
+                className="rounded py-2 px-4 mx-2 border-2"
                 value={levelTag}
               />
             </div>
             <button
               onClick={handleLabelAdd}
-              className={`rounded py-2 px-4 bg-green-600 ${isLoading ? "cursor-not-allowed opacity-50" : null}`}
+              className={`rounded py-2 px-4 my-2 bg-green-600 ${isLoading ? "cursor-not-allowed opacity-50" : null}`}
               disabled={isLoading}
             >
               Add
