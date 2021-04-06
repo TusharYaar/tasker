@@ -1,12 +1,13 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import DummyProgressLevel from "./DummyProgressLevel";
 import AllLevelColors from "./AllLevelColors";
-import {useHistory} from "react-router-dom";
-import {useAuth } from "../Context/AuthContext";
-import {database} from "../firebase";
+import { useHistory } from "react-router-dom";
+import { useAuth } from "../Context/AuthContext";
+import { database } from "../firebase";
+import { MdClose } from "react-icons/md";
 
-const AddProject = ({ addProject,sidebarVisible,updateSidebar }) => {
-  const {currentUser } = useAuth();
+const AddProject = ({ addProject, sidebarVisible, updateSidebar }) => {
+  const { currentUser } = useAuth();
   const history = useHistory();
   const [newProject, addNewProject] = useState({
     projectName: "",
@@ -15,12 +16,13 @@ const AddProject = ({ addProject,sidebarVisible,updateSidebar }) => {
   const [levelColor, changeLevelColor] = useState("red");
   const [levelTag, changeLevelTag] = useState("");
   const [isLoading, toggleLoading] = useState(false);
+  const [nameError, setNameError] = useState("");
+  const [levelError, setLevelError] = useState("");
 
-  useEffect(() =>{
-      updateSidebar(false);
-  },[updateSidebar]);
+  useEffect(() => {
+    updateSidebar(false);
+  }, [updateSidebar]);
 
-  
   const handleChange = (e) => {
     e.preventDefault();
     addNewProject({ ...newProject, [e.target.name]: e.target.value });
@@ -54,47 +56,48 @@ const AddProject = ({ addProject,sidebarVisible,updateSidebar }) => {
     changeLevelColor(event.target.id);
   };
   const submitForm = async (project) => {
-    try { const user = await database.projects.add(project);
+    try {
+      const user = await database.projects.add(project);
       project.id = user.id;
       return project;
-}catch (err) {
+    } catch (err) {
       console.log(err);
     }
-
   };
 
   const handleAddProject = async (event) => {
     toggleLoading(true);
     event.preventDefault();
-    if (newProject.projectName.length <= 3)
-      {alert("Project name cannot be empty");
+    if (
+      newProject.projectName.length <= 3 ||
+      newProject.projectName.length > 15
+    ) {
       toggleLoading(false);
-  }
-      else if (newProject.progressLevels.length < 2)
-      {alert("Progress levels should be atlest 2");
+      setNameError("Project name should be between 4 to 15 characters long");
+      return;
+    }
+    if (newProject.progressLevels.length < 2) {
       toggleLoading(false);
-
-}else {
-      const project = {
-        ...newProject,
-        tasks: [],
-        uid: currentUser.uid,
-         createdAt: database.getCurrentTimestamp(),
-      };
-      const responseProject = await submitForm(project)
-      if (responseProject) {
-        addNewProject({ projectName: "", progressLevels: [] });
-        changeLevelColor("red");
-        changeLevelTag("");
-        addProject(responseProject);
-        history.push(`/${responseProject.id}`);
-      }
-      else 
-       { alert("error adding project");
-       toggleLoading(false);
-      }
-    }     
-
+      setLevelError("Project should have atlest 2 levels");
+      return;
+    }
+    const project = {
+      ...newProject,
+      tasks: [],
+      uid: currentUser.uid,
+      createdAt: database.getCurrentTimestamp(),
+    };
+    const responseProject = await submitForm(project);
+    if (responseProject) {
+      addNewProject({ projectName: "", progressLevels: [] });
+      changeLevelColor("red");
+      changeLevelTag("");
+      addProject(responseProject);
+      history.push(`/${responseProject.id}`);
+    } else {
+      alert("error adding project");
+      toggleLoading(false);
+    }
   };
   const displayLabels = newProject.progressLevels.map((progress, index) => (
     <DummyProgressLevel
@@ -106,7 +109,11 @@ const AddProject = ({ addProject,sidebarVisible,updateSidebar }) => {
     />
   ));
   return (
-    <div className={`p-2 md:p-4 w-full mt-16 ${ sidebarVisible ? "ml-52" : "ml-0" }  transition-all duration-500 md:ml-60`}>
+    <div
+      className={`p-2 md:p-4 w-full mt-16 ${
+        sidebarVisible ? "ml-52" : "ml-0"
+      }  transition-all duration-500 md:ml-60`}
+    >
       <h2 className="text-4xl">Add A Project</h2>
       <div className="flex flex-col">
         <form>
@@ -120,11 +127,37 @@ const AddProject = ({ addProject,sidebarVisible,updateSidebar }) => {
               value={newProject.projectName}
             />
           </div>
+          {nameError.length > 0 && (
+            <div className="flex flex-row justify-between text-red-600 bg-red-200 my-2 px-4 py-2 rounded">
+              {nameError}{" "}
+              <button
+                onClick={() => {
+                  setNameError("");
+                }}
+              >
+                <MdClose />
+              </button>
+            </div>
+          )}
+          {levelError.length > 0 && (
+            <div className="flex flex-row justify-between text-red-600 bg-red-200 px-4 my-2 py-2 rounded">
+              {levelError}{" "}
+              <button
+                onClick={() => {
+                  setLevelError("");
+                }}
+              >
+                <MdClose />
+              </button>
+            </div>
+          )}
 
           <div className="flex flex-col lg:flex-row lg:items-center items-start border p-4 my-2">
-  
-              <AllLevelColors  handleLabelColor={handleLabelColor} active={levelColor}/>
-      
+            <AllLevelColors
+              handleLabelColor={handleLabelColor}
+              active={levelColor}
+            />
+
             <div className="my-2">
               <label htmlFor="labelName">Label: </label>{" "}
               <input
@@ -137,7 +170,9 @@ const AddProject = ({ addProject,sidebarVisible,updateSidebar }) => {
             </div>
             <button
               onClick={handleLabelAdd}
-              className={`rounded py-2 px-4 my-2 bg-green-600 ${isLoading ? "cursor-not-allowed opacity-50" : null}`}
+              className={`rounded py-2 px-4 my-2 bg-green-600 ${
+                isLoading ? "cursor-not-allowed opacity-50" : null
+              }`}
               disabled={isLoading}
             >
               Add
@@ -147,9 +182,11 @@ const AddProject = ({ addProject,sidebarVisible,updateSidebar }) => {
             {displayLabels}
           </div>
           <button
-            className={`rounded py-2 px-4 bg-indigo-600 ${isLoading ? "cursor-not-allowed opacity-50" : null}`}
+            className={`rounded py-2 px-4 bg-indigo-600 ${
+              isLoading ? "cursor-not-allowed opacity-50" : null
+            }`}
             onClick={handleAddProject}
-            type="submit" 
+            type="submit"
             disabled={isLoading}
           >
             Add Project

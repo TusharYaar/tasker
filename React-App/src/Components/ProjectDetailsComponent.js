@@ -93,7 +93,7 @@ const ProjectDetails = ({
           </button>
         </div>
       </div>
-      {taskError.length > 0 &&<div className="flex flex-row justify-between text-red-600 bg-red-200 px-4 py-2 rounded">{taskError} <button onClick={()=> {setTaskError("")}}><MdClose/></button></div>}
+      {taskError.length > 0 &&<div className="flex flex-row justify-between text-red-600 bg-red-200 my-2 px-4 py-2 rounded">{taskError} <button onClick={()=> {setTaskError("")}}><MdClose/></button></div>}
       <ProgressLevels
         levels={data.progressLevels}
         handleSort={handleSort}
