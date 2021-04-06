@@ -8,7 +8,7 @@ const App = () => {
   const {currentUser} = useAuth();
 
   return (
-    <div className="App h-screen">
+    <div className="App h-screen w-screen overflow-x-hidden">
       <Switch>
     <Route path="/login" >{currentUser ? <Redirect to="/home" /> : <SignInPage/>}</Route>
     <Route path="/forgotpassword" exact={true}> {currentUser ? <Redirect to="/home" /> : <ForgotPassword/>}</Route>
