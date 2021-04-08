@@ -125,13 +125,13 @@ const Home = () => {
   const toggleSidebar = () => {
     updateSidebar(!sidebarVisible);
   };
-  const updateProjectSettings = (project) => {
-    const newProjects = projects.map((pro) => {
-      if (pro.id === project.id) return project;
-      else return pro;
-    });
-    updateProject(newProjects);
-  };
+  // const updateProjectSettings = (project) => {
+  //   const newProjects = projects.map((pro) => {
+  //     if (pro.id === project.id) return project;
+  //     else return pro;
+  //   });
+  //   updateProject(newProjects);
+  // };
   const getAccessToken = async (project) => {
     toggleTaskLoading(true);
     let reqProject = projects.filter((pro) => pro.id === project)[0];
@@ -275,7 +275,7 @@ const Home = () => {
                   <SettingsPage
                     data={data}
                     isTaskLoading={isTaskLoading}
-                    updateProjectSettings={updateProjectSettings}
+                    // updateProjectSettings={updateProjectSettings}
                     sidebarVisible={sidebarVisible}
                     updateSidebar={updateSidebar}
                   />

@@ -1,10 +1,12 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import AllLevelColors from "./AllLevelColors";
+import ListUser from "./ListUser";
 import DummyProgressLevel from "./DummyProgressLevel";
 import { useHistory } from "react-router-dom";
 import { database } from "../firebase";
-import {MdClose} from "react-icons/md";
-function SettingsPage({ data, updateProjectSettings,sidebarVisible,updateSidebar }) {
+import {useAuth} from "../Context/AuthContext";
+import { MdClose } from "react-icons/md";
+function SettingsPage({ data, sidebarVisible, updateSidebar }) {
   const [project, alterProject] = useState(data);
   const [levelColor, changeLevelColor] = useState("red");
   const [levelTag, changeLevelTag] = useState("");
@@ -13,10 +15,12 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,updateSidebar
   const [nameError, setNameError] = useState("");
   const [levelError, setLevelError] = useState("");
 
+  const {currentUser} = useAuth();
+
   const history = useHistory();
-  useEffect(() =>{
+  useEffect(() => {
     updateSidebar(false);
-},[updateSidebar]);
+  }, [updateSidebar]);
 
   const handleChange = (event) => {
     alterProject({ ...project, projectName: event.target.value });
@@ -26,23 +30,22 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,updateSidebar
   };
   const handleDelInput = (event) => {
     setInput(event.target.value);
-  }
+  };
   const handleDeleteProject = async () => {
     toggleLoading(true);
     const id = project.id;
     try {
       await database.projects.doc(id).delete();
       history.push("/home");
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
       toggleLoading(false);
     }
-  }
+  };
   const handleLabelAdd = (e) => {
     e.preventDefault();
-    if (levelTag.length >= 3 && levelTag.length <=10)
-       {alterProject({
+    if (levelTag.length >= 3 && levelTag.length <= 10) {
+      alterProject({
         ...project,
         progressLevels: [
           ...project.progressLevels,
@@ -52,7 +55,8 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,updateSidebar
           },
         ],
       });
-    return }
+      return;
+    }
     setLevelError("Length of label should be between 3 to 10 characters");
   };
   const handleLabelDelete = (event, tag) => {
@@ -79,64 +83,71 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,updateSidebar
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-      if(project.projectName.length <= 3 || project.projectName.length > 15) {
-        setNameError("Project name should be between 4 to 15 characters long");
-        return;
-      }
-    
-     if (project.progressLevels.length < 2)
-      { 
-        setLevelError("Progress Levels should be greater than 2");
-        return;
-      }
-  
-      setLevelError("");
-      setNameError("");
-      if (data.progressLevels.length > project.progressLevels.length) {
-        const alterTask = project.tasks.map((task) => {
-          if (task.progress >= project.progressLevels.length) {
-              task.progress = project.progressLevels.length -1;
-          }
-          return task;
-        });
-        alterProject({
-          ...project,
-          tasks: alterTask
-        });
+    if (project.projectName.length <= 3 || project.projectName.length > 15) {
+      setNameError("Project name should be between 4 to 15 characters long");
+      return;
+    }
 
-      }
-      handleUpdateProject();
-    
+    if (project.progressLevels.length < 2) {
+      setLevelError("Progress Levels should be greater than 2");
+      return;
+    }
+    setLevelError("");
+    setNameError("");
+    if (data.progressLevels.length > project.progressLevels.length) {
+      const alterTask = project.tasks.map((task) => {
+        if (task.progress >= project.progressLevels.length) {
+          task.progress = project.progressLevels.length - 1;
+        }
+        return task;
+      });
+      alterProject({
+        ...project,
+        tasks: alterTask,
+      });
+    }
+    handleUpdateProject();
   };
+  
+  const deleteUser = (uid) => {
+    alterProject({
+      ...project,
+      allowedUsers: project.allowedUsers.filter(user => user!==uid)
+  });
+  }
+  const listCollaborators = project.allowedUsers.filter(user => user!==currentUser.uid).map(user => <ListUser deleteUser={deleteUser} uid={user} key={user} />)
+
 
   const handleUpdateProject = async () => {
     toggleLoading(true);
     const id = project.id;
     const tempProject = project;
     delete tempProject.id;
-    const newLastUpdated =database.convertTimestamp(new Date());
+    const newLastUpdated = database.convertTimestamp(new Date());
     tempProject.lastUpdated = newLastUpdated;
     project.lastUpdated = newLastUpdated;
     alterProject(tempProject);
     try {
       await database.projects.doc(id).set(project);
-      tempProject.id = id;
-      alterProject(tempProject);
-      updateProjectSettings(project);
       history.push(`/${id}`);
     } catch (err) {
       console.log(err);
       toggleLoading(false);
     }
-
-
   };
+
   return (
-    <div className={`p-2 md:p-4 w-full mt-16 ${ sidebarVisible ? "ml-52" : "ml-0" }  transition-all duration-500 md:ml-60`}>
-      <h2 className="text-2xl md:text-3xl lg:text-4xl">Edit <span className="italic mx-2">{data.projectName}</span></h2>
+    <div
+      className={`p-2 md:p-4 w-full mt-16 ${
+        sidebarVisible ? "ml-52" : "ml-0"
+      }  transition-all duration-500 md:ml-60`}
+    >
+      <h2 className="text-2xl md:text-3xl lg:text-4xl">
+        Edit <span className="italic mx-2">{data.projectName}</span>
+      </h2>
       <div className="flex flex-col">
         <form>
-        <div className="my-4 text-3xl border p-2 items-center lg:p-4 flex flex-row flex-wrap justify-start">
+          <div className="my-4 text-3xl border p-2 items-center lg:p-4 flex flex-row flex-wrap justify-start">
             <label htmlFor="projectName">Name:</label>
             <input
               name="projectName"
@@ -171,7 +182,7 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,updateSidebar
               </button>
             </div>
           )}
-          <div className="flex flex-col lg:flex-row items-start lg:items-center border p-4 my-2">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center  p-4 my-2 md:my-4 border">
             <div className="flex flex-row items-center">
               <AllLevelColors
                 handleLabelColor={handleLabelColor}
@@ -201,8 +212,18 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,updateSidebar
           <div className="flex flex-row flex-wrap p-4 my-2 md:my-4 border">
             {displayLabels}
           </div>
+          <div className="flex flex-col items-start   p-4 my-2 md:my-4 border">
+            <h3 className="text-3xl my-2">Collaborators</h3>
+            <div className="rounded border-2 bg-yellow-200 text-yellow-700 border-yellow-600 py-2 px-4 text-xl ">
+              Currently you have <span className="font-bold italic"> {project.allowedUsers.length - 1} </span>Collaborator/s
+            </div>
+            {listCollaborators}
+          </div>
+          <div className=" text-purple-700  inline mt-4 py-1 px-2">
+            Once you are done with the changes click update project to save the changes
+          </div>
           <button
-            className={`rounded py-2 px-4 bg-indigo-600 my-4 ${
+            className={`rounded py-2 px-4 bg-indigo-200 border-blue-600 text-blue-700 border-2 mt-2 mb-4 block ${
               isLoading ? "cursor-not-allowed opacity-50" : null
             }`}
             onClick={handleSubmit}
@@ -215,11 +236,32 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,updateSidebar
       </div>
       <div className="border p-4 my-2 md:my-4 flex-col flex items-start">
         <h3 className="text-3xl my-2">Unsafe Area</h3>
-        <p className="text">Done with the Project and don't want it to take that space in the sidebar, reminding you that you never actually finished the project and you are just deleting it so that you can tell your self you finished the project.
-          Is it so...., then go ahead... <span className="font-bold block my-2">But remember, this process is irreversible.</span>
-          Type the name of the project in the Input</p>
-          <input className="px-4 py-2 my-1 border-2 rounded border-gray-200 focus:border-gray-400" value={deleteInput} onChange={handleDelInput} />
-      <button className={`bg-red-300 text-red-600 py-2 px-4 my-2 rounded border-red-500 border-2 ${deleteInput===data.projectName ? "" : "cursor-not-allowed opacity-50"}`} disabled={!deleteInput===data.projectName} onClick={handleDeleteProject}>Delete Project</button>
+        <p className="text">
+          Done with the Project and don't want it to take that space in the
+          sidebar, reminding you that you never actually finished the project
+          and you are just deleting it so that you can tell your self you
+          finished the project. Is it so...., then go ahead...{" "}
+          <span className="font-bold block my-2">
+            But remember, this process is irreversible.
+          </span>
+          Type the name of the project in the Input
+        </p>
+        <input
+          className="px-4 py-2 my-1 border-2 rounded border-gray-200 focus:border-gray-400"
+          value={deleteInput}
+          onChange={handleDelInput}
+        />
+        <button
+          className={`bg-red-300 text-red-600 py-2 px-4 my-2 rounded border-red-500 border-2 ${
+            deleteInput === data.projectName
+              ? ""
+              : "cursor-not-allowed opacity-50"
+          }`}
+          disabled={!deleteInput === data.projectName}
+          onClick={handleDeleteProject}
+        >
+          Delete Project
+        </button>
       </div>
     </div>
   );

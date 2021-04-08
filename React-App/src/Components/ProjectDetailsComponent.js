@@ -118,7 +118,7 @@ const ProjectDetails = ({
           handleGenerateToken={handleGenerateToken}
         />
       ) : (
-        <div className="px-2 py-1 bg-yellow-200 text-yellow-700 border-yellow-600 border-2 self-start rounded text-sm">
+        <div className="px-2 py-1  text-yellow-700 self-start rounded text-sm">
           Only project Owner can generate a Tokens
         </div>
       )}
