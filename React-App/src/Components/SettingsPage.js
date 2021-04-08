@@ -115,7 +115,9 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject
     const id = project.id;
     const tempProject = project;
     delete tempProject.id;
-    tempProject.lastUpdated= database.getCurrentTimestamp();
+    const newLastUpdated =database.convertTimestamp(new Date());
+    tempProject.lastUpdated = newLastUpdated;
+    project.lastUpdated = newLastUpdated;
     alterProject(tempProject);
     try {
       await database.projects.doc(id).set(project);

@@ -22,7 +22,8 @@ export const database = {
   getCurrentTimestamp: firebase.firestore.FieldValue.serverTimestamp,
   arrayUnion: firebase.firestore.FieldValue.arrayUnion,
   arrayRemove: firebase.firestore.FieldValue.arrayRemove,
-  authProvider : firebase.auth.EmailAuthProvider
+  authProvider : firebase.auth.EmailAuthProvider,
+  convertTimestamp: firebase.firestore.Timestamp.fromDate
 }
 console.log();
 export const googleProvider = new firebase.auth.GoogleAuthProvider();

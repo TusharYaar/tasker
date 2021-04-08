@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Task from "./TaskComponent";
 import ProgressLevels from "./ProgressLevels";
-import { MdSettings,MdClose } from "react-icons/md";
+import { MdSettings, MdClose } from "react-icons/md";
 import { Link } from "react-router-dom";
 const ProjectDetails = ({
   data,
@@ -12,33 +12,33 @@ const ProjectDetails = ({
   addTask,
   isTaskLoading,
   sidebarVisible,
-  updateSidebar
+  updateSidebar,
+  getAccessToken,
 }) => {
   const [newTask, addNewTask] = useState("");
-  const [taskError,setTaskError] = useState("");
+  const [taskError, setTaskError] = useState("");
   useEffect(() => {
     updateSidebar(false);
-  }, [updateSidebar,data]);
+  }, [updateSidebar, data]);
 
   const handleNewTask = (event) => {
     addNewTask(event.target.value);
   };
   const submitNewTask = () => {
-    if (newTask.length > 2 && newTask.length <15) 
-    { if(taskError) setTaskError("");
+    if (newTask.length > 2 && newTask.length < 15) {
+      if (taskError) setTaskError("");
       addTask(data.id, newTask);
-    addNewTask("");
-  } else if (newTask.length <=2 ){
-    setTaskError("Task Should be greater than 2 characters long");
-  } 
-  else if (newTask.length >= 15) {
-    setTaskError("Task Length should be smaller than 15 characters")
-  }
+      addNewTask("");
+    } else if (newTask.length <= 2) {
+      setTaskError("Task Should be greater than 2 characters long");
+    } else if (newTask.length >= 15) {
+      setTaskError("Task Length should be smaller than 15 characters");
+    }
   };
   const sortAllTasks = (value) => {
-    // console.log(data.lastUpdated.toDate());
-    // const date = Date();
-    // console.log( typeof date.toDateString());
+    // console.log(Date.parse(data.lastUpdated.toDate()));
+    // const date =new Date();
+    // console.log(date.setTime(date.getTime() + 15*60000));
     if (sortTask === null) return true;
     else if (sortTask === value.progress) return true;
     else return false;
@@ -58,6 +58,16 @@ const ProjectDetails = ({
         isTaskLoading={isTaskLoading}
       />
     ));
+  const handleGenerateToken = async (event) => {
+    event.preventDefault();
+    await getAccessToken(data.id);
+  };
+  const showAccessCode = () => {
+    const currentTime = new Date();
+    if (Date.parse(currentTime) - Date.parse(data.tokenValidity.toDate()) < 0)
+      return true;
+    return false;
+  };
   return (
     <div
       className={`p-2 md:p-4 flex-col flex justify-start w-full mt-16 ${
@@ -96,7 +106,33 @@ const ProjectDetails = ({
           </button>
         </div>
       </div>
-      {taskError.length > 0 &&<div className="flex flex-row justify-between text-red-600 bg-red-200 my-2 px-4 py-2 rounded">{taskError} <button onClick={()=> {setTaskError("")}}><MdClose/></button></div>}
+      {data.accessToken && showAccessCode() ? (
+        <div className="mx-2 my-2 text-">Access Token: <span className="text-lg bg-blue-200 px-2 text-blue-700 italic border-blue-600 rounded">{data.accessToken}</span></div>
+      ) : (
+        <div>
+          <button
+            className={`bg-blue-200 text-blue-700 border-2 border-blue-600 text-base px-2 rounded mx-2 my-2 ${
+              isTaskLoading ? "cursor-not-allowed opacity-50" : null
+            }`}
+            onClick={handleGenerateToken}
+          >
+            Generate Token
+          </button>
+        </div>
+      )}
+
+      {taskError.length > 0 && (
+        <div className="flex flex-row justify-between text-red-600 bg-red-200 my-2 px-4 py-2 rounded">
+          {taskError}{" "}
+          <button
+            onClick={() => {
+              setTaskError("");
+            }}
+          >
+            <MdClose />
+          </button>
+        </div>
+      )}
       <ProgressLevels
         levels={data.progressLevels}
         handleSort={handleSort}
