@@ -158,25 +158,16 @@ const Home = () => {
         tokenValidity: newTokenValidity,
         lastUpdated: newLastUpdated,
       });
-      reqProject = {
-        ...reqProject,
-        accessToken: newAccessToken,
-        tokenValidity: newTokenValidity,
-        lastUpdated: newLastUpdated,
-      };
-      const newArr = projects.map((pro) => {
-        if (pro.id === project) {
-          return reqProject;
-        } else return pro;
-      });
-      updateProject(newArr);
     } catch (e) {
       console.log(e);
     }
     toggleTaskLoading(false);
   };
   const addAccessToken = async (token) => {
-    console.log(token);
+    const allTokens = projects.map(project => project.accessToken);
+    if(allTokens.includes(token)) {
+      return { message:"Project already added", type: "error"};
+    }
     let dataID, data;
     try {
       var query = await database.projects

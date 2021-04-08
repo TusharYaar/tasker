@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import Task from "./TaskComponent";
 import ProgressLevels from "./ProgressLevels";
+import AccessToken from "./AccessToken";
 import { MdSettings, MdClose } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useAuth } from "../Context/AuthContext";
 const ProjectDetails = ({
   data,
   updateTaskProgress,
@@ -15,6 +17,7 @@ const ProjectDetails = ({
   updateSidebar,
   getAccessToken,
 }) => {
+  const { currentUser } = useAuth();
   const [newTask, addNewTask] = useState("");
   const [taskError, setTaskError] = useState("");
   useEffect(() => {
@@ -97,7 +100,7 @@ const ProjectDetails = ({
           />
           <button
             className={`bg-gray-200 text-gray-700 border-2 border-gray-600 text-base px-4 py-2 rounded mx-2 my-2 ${
-              isTaskLoading ? "cursor-not-allowed opacity-50" : null
+              isTaskLoading ? "cursor-not-allowed opacity-50" : ""
             }`}
             onClick={submitNewTask}
             disabled={isTaskLoading}
@@ -106,30 +109,16 @@ const ProjectDetails = ({
           </button>
         </div>
       </div>
-      {data.accessToken && showAccessCode() ? (
-        <div className="mx-2 my-2 flex flex-col">
-          <span>
-            Access Token:{" "}
-            <span className="text-lg bg-blue-200 px-2 text-blue-700 italic border-blue-600 rounded">
-              {data.accessToken}
-            </span>
-          </span>{" "}
-          <span>Valid Till: 
-          <span className="text-sm bg-yellow-200 px-2 text-yellow-700 italic mx-2 border-yellow-600 border-2 rounded"> {data.tokenValidity.toDate().toLocaleString()}
-          
-          </span></span>
-        </div>
+      {data.uid === currentUser.uid ? (
+        <AccessToken
+          data={data}
+          showAccessCode={showAccessCode}
+          isTaskLoading={isTaskLoading}
+          handleGenerateToken={handleGenerateToken}
+        />
       ) : (
-        <div className="flex flex-col items-start">
-          <button
-            className={`bg-blue-200 text-blue-700 border-2 border-blue-600 text-base px-2 rounded mx-2 my-1 ${
-              isTaskLoading ? "cursor-not-allowed opacity-50" : null
-            }`}
-            onClick={handleGenerateToken}
-          >
-            Generate Token
-          </button>
-          <span className="bg-yellow-200 px-2 text-yellow-700 italic border-yellow-600 border-2 mx-2 rounded text-sm">Valid for 15mins</span>
+        <div className="px-2 py-1 bg-yellow-200 text-yellow-700 border-yellow-600 border-2 self-start rounded text-sm">
+          Only project Owner can generate a Tokens
         </div>
       )}
 

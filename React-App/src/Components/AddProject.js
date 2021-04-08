@@ -175,7 +175,7 @@ const AddProject = ({ addProject, sidebarVisible, updateSidebar }) => {
             <button
               onClick={handleLabelAdd}
               className={`rounded py-2 px-4 my-2 bg-green-600 ${
-                isLoading ? "cursor-not-allowed opacity-50" : null
+                isLoading ? "cursor-not-allowed opacity-50" : ""
               }`}
               disabled={isLoading}
             >
@@ -187,7 +187,7 @@ const AddProject = ({ addProject, sidebarVisible, updateSidebar }) => {
           </div>
           <button
             className={`rounded py-2 px-4 bg-indigo-600 ${
-              isLoading ? "cursor-not-allowed opacity-50" : null
+              isLoading ? "cursor-not-allowed opacity-50" : ""
             }`}
             onClick={handleAddProject}
             type="submit"
