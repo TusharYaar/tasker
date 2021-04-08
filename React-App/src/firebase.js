@@ -25,7 +25,7 @@ export const database = {
   authProvider : firebase.auth.EmailAuthProvider,
   convertTimestamp: firebase.firestore.Timestamp.fromDate
 }
-console.log();
+
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
 export const githubProvider = new firebase.auth.GithubAuthProvider();
 

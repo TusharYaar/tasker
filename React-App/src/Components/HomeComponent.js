@@ -19,7 +19,7 @@ const Home = () => {
   useEffect(() => {
     const getProjects = async () => {
       try {
-        const querySnapshot = await database.projects
+        var querySnapshot = await database.projects
           .where("uid", "==", currentUser.uid)
           .get();
         const projects = [];
@@ -27,6 +27,15 @@ const Home = () => {
           let project = doc.data();
           project.id = doc.id;
           projects.push(project);
+        });
+        querySnapshot = await database.projects
+          .where("allowedUsers", "array-contains", currentUser.uid)
+          .get();
+        querySnapshot.forEach((doc) => {
+          let project = doc.data();
+          project.id = doc.id;
+          projects.push(project);
+          console.log(project);
         });
         if (projects.length !== 0) updateProject(projects);
       } catch (err) {
@@ -52,15 +61,13 @@ const Home = () => {
         if (task.taskID === id) task.progress += value;
         return task;
       });
-      const newLastUpdated =database.convertTimestamp(new Date());
+      const newLastUpdated = database.convertTimestamp(new Date());
       console.log();
       newArr[pIndex].lastUpdated = newLastUpdated;
-      await database.projects
-        .doc(project)
-        .update({
-          tasks: updatedTasks,
-          lastUpdated: newLastUpdated,
-        });
+      await database.projects.doc(project).update({
+        tasks: updatedTasks,
+        lastUpdated: newLastUpdated,
+      });
       updateProject(newArr);
     } catch (err) {
       console.log(err);
@@ -80,7 +87,7 @@ const Home = () => {
       taskID: id,
     };
     try {
-      const newLastUpdated =database.convertTimestamp(new Date());
+      const newLastUpdated = database.convertTimestamp(new Date());
       await currentProject.update({
         tasks: database.arrayRemove(taskToDel),
         lastUpdated: newLastUpdated,
@@ -89,7 +96,8 @@ const Home = () => {
         if (pro.id === project) {
           return {
             ...pro,
-            tasks: pro.tasks.filter((task) => task.taskID !== id),lastUpdated: newLastUpdated
+            tasks: pro.tasks.filter((task) => task.taskID !== id),
+            lastUpdated: newLastUpdated,
           };
         } else return pro;
       });
@@ -108,7 +116,7 @@ const Home = () => {
       progress: 0,
     };
     try {
-      const newLastUpdated =database.convertTimestamp(new Date());
+      const newLastUpdated = database.convertTimestamp(new Date());
       console.log(newLastUpdated);
       const currentProject = database.projects.doc(project);
       await currentProject.update({
@@ -157,15 +165,16 @@ const Home = () => {
       newAccessToken = cuid.slug();
     } else {
       console.log("This Token is still valid");
-    toggleTaskLoading(false);
+      toggleTaskLoading(false);
 
-      return}
+      return;
+    }
     currentTime = new Date(
       currentTime.setTime(currentTime.getTime() + 15 * 60000)
     );
     try {
       const newTokenValidity = database.convertTimestamp(currentTime);
-      const newLastUpdated =database.convertTimestamp(new Date());
+      const newLastUpdated = database.convertTimestamp(new Date());
       await database.projects.doc(project).update({
         accessToken: newAccessToken,
         tokenValidity: newTokenValidity,
@@ -175,7 +184,7 @@ const Home = () => {
         ...reqProject,
         accessToken: newAccessToken,
         tokenValidity: newTokenValidity,
-        lastUpdated: newLastUpdated
+        lastUpdated: newLastUpdated,
       };
       const newArr = projects.map((pro) => {
         if (pro.id === project) {
@@ -187,15 +196,43 @@ const Home = () => {
       console.log(e);
     }
     toggleTaskLoading(false);
-
   };
+  const addAccessToken = async (token) => {
+    console.log(token);
+    let dataID, data;
+    try {
+      var query = await database.projects
+        .where("accessToken", "==", token)
+        .get();
+      query.forEach((doc) => {
+        dataID = doc.id;
+        data = doc.data();
+      });
 
+      // console.log(data);
+      const newLastUpdated = database.convertTimestamp(new Date());
+      query = await database.projects.doc(dataID).update({
+        allowedUsers: database.arrayUnion(currentUser.uid),
+        lastUpdated: newLastUpdated,
+      });
+
+      if (!data.allowedUsers) data.allowedUsers = [currentUser.uid];
+      else data.allowedUsers = [...data.allowedUsers, currentUser.uid];
+      data.id = dataID;
+      data.lastUpdated = newLastUpdated;
+      addProject(data);
+      return { message: "success", type: "success" };
+    } catch (err) {
+      return { message: err.message, type: "error" };
+    }
+  };
   return (
     <div className="h-full">
       <Navbar toggleSidebar={toggleSidebar} />
       <div className="flex flex-row h-full">
         <Sidebar
           sidebarVisible={sidebarVisible}
+          addAccessToken={addAccessToken}
           projects={projects.map((project) => {
             return {
               id: project.id,
