@@ -59,6 +59,7 @@ const ProjectDetails = ({
         updateTaskProgress={updateTaskProgress}
         deleteTask={deleteTask}
         isTaskLoading={isTaskLoading}
+        setTaskError={setTaskError}
       />
     ));
   const handleGenerateToken = async (event) => {

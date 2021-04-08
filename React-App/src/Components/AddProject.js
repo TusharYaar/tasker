@@ -6,7 +6,7 @@ import { useAuth } from "../Context/AuthContext";
 import { database } from "../firebase";
 import { MdClose } from "react-icons/md";
 
-const AddProject = ({ addProject, sidebarVisible, updateSidebar }) => {
+const AddProject = ({ sidebarVisible, updateSidebar }) => {
   const { currentUser } = useAuth();
   const history = useHistory();
   const [newProject, addNewProject] = useState({
@@ -93,10 +93,6 @@ const AddProject = ({ addProject, sidebarVisible, updateSidebar }) => {
     };
     const responseProject = await submitForm(project);
     if (responseProject) {
-      addNewProject({ projectName: "", progressLevels: [] });
-      changeLevelColor("red");
-      changeLevelTag("");
-      addProject(responseProject);
       history.push(`/${responseProject.id}`);
     } else {
       alert("error adding project");

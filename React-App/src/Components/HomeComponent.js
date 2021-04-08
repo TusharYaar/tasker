@@ -49,10 +49,6 @@ const Home = () => {
     getProjects();
   }, [currentUser.uid]);
 
-  const addProject = (project) => {
-    updateProject([...projects, project]);
-  };
-
   const updateTaskProgress = async (project, id, value) => {
     toggleTaskLoading(true);
     try {
@@ -66,11 +62,14 @@ const Home = () => {
         tasks: updatedTasks,
         lastUpdated: newLastUpdated,
       });
-
+      toggleTaskLoading(false);
+      return;
     } catch (err) {
       console.log(err);
+      toggleTaskLoading(false);
+      return err.message;
     }
-    toggleTaskLoading(false);
+
   };
   const handleSort = (value) => {
     updateSort(value);
@@ -90,10 +89,15 @@ const Home = () => {
         tasks: database.arrayRemove(taskToDel),
         lastUpdated: newLastUpdated,
       });
+      toggleTaskLoading(false);
+      return ;
     } catch (err) {
       console.log(err);
+      toggleTaskLoading(false);
+      return err.message;
+
     }
-    toggleTaskLoading(false);
+
   };
   const addTask = async (project, task) => {
     toggleTaskLoading(true);
@@ -109,11 +113,14 @@ const Home = () => {
         tasks: database.arrayUnion(newTask),
         lastUpdated: newLastUpdated,
       });
+      toggleTaskLoading(false);
+      return;
     } catch (err) {
       console.log(err);
-      alert("error");
+      toggleTaskLoading(false);
+      return err.message;
     }
-    toggleTaskLoading(false);
+
   };
   const toggleSidebar = () => {
     updateSidebar(!sidebarVisible);
@@ -168,28 +175,19 @@ const Home = () => {
     if(allTokens.includes(token)) {
       return { message:"Project already added", type: "error"};
     }
-    let dataID, data;
+    let dataID;
     try {
       var query = await database.projects
         .where("accessToken", "==", token)
         .get();
       query.forEach((doc) => {
         dataID = doc.id;
-        data = doc.data();
       });
-
-      // console.log(data);
       const newLastUpdated = database.convertTimestamp(new Date());
       query = await database.projects.doc(dataID).update({
         allowedUsers: database.arrayUnion(currentUser.uid),
         lastUpdated: newLastUpdated,
       });
-
-      if (!data.allowedUsers) data.allowedUsers = [currentUser.uid];
-      else data.allowedUsers = [...data.allowedUsers, currentUser.uid];
-      data.id = dataID;
-      data.lastUpdated = newLastUpdated;
-      addProject(data);
       return { message: "success", type: "success" };
     } catch (err) {
       return { message: err.message, type: "error" };
@@ -215,7 +213,6 @@ const Home = () => {
             path="/addproject"
             render={() => (
               <AddProject
-                addProject={addProject}
                 sidebarVisible={sidebarVisible}
                 updateSidebar={updateSidebar}
               />
