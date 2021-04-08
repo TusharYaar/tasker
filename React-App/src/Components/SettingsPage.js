@@ -212,13 +212,13 @@ function SettingsPage({ data, sidebarVisible, updateSidebar }) {
           <div className="flex flex-row flex-wrap p-4 my-2 md:my-4 border">
             {displayLabels}
           </div>
-          <div className="flex flex-col items-start   p-4 my-2 md:my-4 border">
+         { project.uid === currentUser.uid && <div className="flex flex-col items-start   p-4 my-2 md:my-4 border">
             <h3 className="text-3xl my-2">Collaborators</h3>
             <div className="rounded border-2 bg-yellow-200 text-yellow-700 border-yellow-600 py-2 px-4 text-xl ">
               Currently you have <span className="font-bold italic"> {project.allowedUsers.length - 1} </span>Collaborator/s
             </div>
             {listCollaborators}
-          </div>
+          </div>}
           <div className=" text-purple-700  inline mt-4 py-1 px-2">
             Once you are done with the changes click update project to save the changes
           </div>
