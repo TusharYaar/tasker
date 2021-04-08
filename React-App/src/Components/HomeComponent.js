@@ -19,24 +19,28 @@ const Home = () => {
   useEffect(() => {
     const getProjects = async () => {
       try {
-        var querySnapshot = await database.projects
-          .where("uid", "==", currentUser.uid)
-          .get();
-        const projects = [];
-        querySnapshot.forEach((doc) => {
-          let project = doc.data();
-          project.id = doc.id;
-          projects.push(project);
-        });
-        querySnapshot = await database.projects
+        var projects = [];
+        database.projects
           .where("allowedUsers", "array-contains", currentUser.uid)
-          .get();
-        querySnapshot.forEach((doc) => {
-          let project = doc.data();
-          project.id = doc.id;
-          projects.push(project);
-          console.log(project);
-        });
+          .onSnapshot((snapshot) => {
+            projects= [];
+            snapshot.forEach((doc) => {
+              
+              let project = doc.data();
+              project.id = doc.id;
+              projects.push(project);
+            });
+            updateProject(projects);
+          });
+        // var querySnapshot2 = await database.projects
+        //   .where("allowedUsers", "array-contains", currentUser.uid)
+        //   .get();
+        // querySnapshot2.forEach((doc) => {
+        //   let project = doc.data();
+        //   project.id = doc.id;
+        //   projects.push(project);
+        //   console.log(project);
+        // });
         if (projects.length !== 0) updateProject(projects);
       } catch (err) {
         console.log(err);
@@ -48,27 +52,21 @@ const Home = () => {
   const addProject = (project) => {
     updateProject([...projects, project]);
   };
-  const deleteProject = (project) => {
-    updateProject(projects.filter((pro) => pro.id !== project));
-    return projects[0].id;
-  };
+
   const updateTaskProgress = async (project, id, value) => {
     toggleTaskLoading(true);
     try {
       const pIndex = projects.findIndex((pro) => pro.id === project);
-      var newArr = [...projects];
       const updatedTasks = projects[pIndex].tasks.map((task) => {
         if (task.taskID === id) task.progress += value;
         return task;
       });
       const newLastUpdated = database.convertTimestamp(new Date());
-      console.log();
-      newArr[pIndex].lastUpdated = newLastUpdated;
       await database.projects.doc(project).update({
         tasks: updatedTasks,
         lastUpdated: newLastUpdated,
       });
-      updateProject(newArr);
+
     } catch (err) {
       console.log(err);
     }
@@ -92,16 +90,6 @@ const Home = () => {
         tasks: database.arrayRemove(taskToDel),
         lastUpdated: newLastUpdated,
       });
-      const nArr = projects.map((pro) => {
-        if (pro.id === project) {
-          return {
-            ...pro,
-            tasks: pro.tasks.filter((task) => task.taskID !== id),
-            lastUpdated: newLastUpdated,
-          };
-        } else return pro;
-      });
-      updateProject(nArr);
     } catch (err) {
       console.log(err);
     }
@@ -109,7 +97,6 @@ const Home = () => {
   };
   const addTask = async (project, task) => {
     toggleTaskLoading(true);
-    const pID = projects.findIndex((pro) => pro.id === project);
     const newTask = {
       taskID: cuid.slug(),
       taskName: task,
@@ -117,20 +104,11 @@ const Home = () => {
     };
     try {
       const newLastUpdated = database.convertTimestamp(new Date());
-      console.log(newLastUpdated);
       const currentProject = database.projects.doc(project);
       await currentProject.update({
         tasks: database.arrayUnion(newTask),
         lastUpdated: newLastUpdated,
       });
-      const newArr = projects.map((pro) => {
-        if (pro.id === project) {
-          pro.lastUpdated = newLastUpdated;
-          pro.tasks = [...projects[pID].tasks, newTask];
-          return pro;
-        } else return pro;
-      });
-      updateProject(newArr);
     } catch (err) {
       console.log(err);
       alert("error");
@@ -311,7 +289,6 @@ const Home = () => {
                     isTaskLoading={isTaskLoading}
                     updateProjectSettings={updateProjectSettings}
                     sidebarVisible={sidebarVisible}
-                    deleteProject={deleteProject}
                     updateSidebar={updateSidebar}
                   />
                 );

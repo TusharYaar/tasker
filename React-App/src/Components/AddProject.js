@@ -89,6 +89,7 @@ const AddProject = ({ addProject, sidebarVisible, updateSidebar }) => {
       uid: currentUser.uid,
       createdAt: database.getCurrentTimestamp(),
       lastUpdated: database.getCurrentTimestamp(),
+      allowedUsers: [currentUser.uid],
     };
     const responseProject = await submitForm(project);
     if (responseProject) {

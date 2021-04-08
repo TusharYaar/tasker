@@ -4,7 +4,7 @@ import DummyProgressLevel from "./DummyProgressLevel";
 import { useHistory } from "react-router-dom";
 import { database } from "../firebase";
 import {MdClose} from "react-icons/md";
-function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject,updateSidebar }) {
+function SettingsPage({ data, updateProjectSettings,sidebarVisible,updateSidebar }) {
   const [project, alterProject] = useState(data);
   const [levelColor, changeLevelColor] = useState("red");
   const [levelTag, changeLevelTag] = useState("");
@@ -32,8 +32,7 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject
     const id = project.id;
     try {
       await database.projects.doc(id).delete();
-      const nId = deleteProject(id);
-      history.push(`/${nId}`)
+      history.push("/home");
     }
     catch (err) {
       console.log(err);
