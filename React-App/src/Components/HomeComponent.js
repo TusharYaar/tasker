@@ -53,7 +53,7 @@ const Home = () => {
         task.progress += value;
       return task;
     });
-    await database.projects.doc(project).update({tasks: updatedTasks});
+    await database.projects.doc(project).update({tasks: updatedTasks,lastUpdated: database.getCurrentTimestamp()});
     updateProject(newArr);
     }catch(err){
       console.log(err);
@@ -73,7 +73,7 @@ const Home = () => {
       taskID: id,
     }
     try {
-    await currentProject.update({tasks: database.arrayRemove(taskToDel)});
+    await currentProject.update({tasks: database.arrayRemove(taskToDel),lastUpdated: database.getCurrentTimestamp()});
     const nArr = projects.map((pro) => {
       if (pro.id === project) {
         return {
@@ -96,7 +96,7 @@ const Home = () => {
     };
     try {
     const currentProject = database.projects.doc(project);
-    await currentProject.update({tasks: database.arrayUnion(newTask)});
+    await currentProject.update({tasks: database.arrayUnion(newTask),lastUpdated: database.getCurrentTimestamp()});
     const newArr = projects.map((pro) => {
       if (pro.id === project) {
         pro.tasks = [
@@ -113,8 +113,8 @@ const Home = () => {
   const toggleSidebar = () => {
     updateSidebar(!sidebarVisible);
   }
-  const updateProjectSettings = (project,id) => {
-  const newProjects = projects.map(pro => {if(pro.id===id)return {...project,id: id}
+  const updateProjectSettings = (project) => {
+  const newProjects = projects.map(pro => {if(pro.id===project.id)return project;
 else return pro});
 updateProject(newProjects);
 }

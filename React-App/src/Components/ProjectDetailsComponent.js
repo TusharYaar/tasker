@@ -36,6 +36,9 @@ const ProjectDetails = ({
   }
   };
   const sortAllTasks = (value) => {
+    // console.log(data.lastUpdated.toDate());
+    // const date = Date();
+    // console.log( typeof date.toDateString());
     if (sortTask === null) return true;
     else if (sortTask === value.progress) return true;
     else return false;

@@ -113,17 +113,22 @@ function SettingsPage({ data, updateProjectSettings,sidebarVisible,deleteProject
   const handleUpdateProject = async () => {
     toggleLoading(true);
     const id = project.id;
+    const tempProject = project;
+    delete tempProject.id;
+    tempProject.lastUpdated= database.getCurrentTimestamp();
+    alterProject(tempProject);
     try {
-      delete project.id;
       await database.projects.doc(id).set(project);
-      updateProjectSettings(project, id);
-      changeLevelColor("red");
-      changeLevelTag("");
+      tempProject.id = id;
+      alterProject(tempProject);
+      updateProjectSettings(project);
+      history.push(`/${id}`);
     } catch (err) {
       console.log(err);
+      toggleLoading(false);
     }
-    toggleLoading(false);
-    history.push(`/${id}`);
+
+
   };
   return (
     <div className={`p-2 md:p-4 w-full mt-16 ${ sidebarVisible ? "ml-52" : "ml-0" }  transition-all duration-500 md:ml-60`}>
