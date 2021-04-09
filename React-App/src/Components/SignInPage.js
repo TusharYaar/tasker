@@ -106,8 +106,8 @@ function SignInPage() {
   return (
     <div className="h-full">
       <Navbar displayEvery={true} />
-      <div className="flex flex-row justify-center items-centered rounded">
-        <div className="bg-gray-100 p-4 m-4 sm:w-auto w-screen divide-y divide-gray-300 md:w-3/5 xl:w-2/5 mt-20">
+      <div className="flex flex-col justify-center items-center rounded">
+        <div className="bg-gray-100 border-gray-500 border-2 rounded p-4 m-4 sm:w-auto w-screen divide-y divide-gray-300 md:w-3/5 xl:w-2/5 mt-20">
           <div className="">
             <h2 className="text-4xl">{loginMethod}</h2>
             {errorMessage.length > 0 ? <p className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-3 rounded text-center w-full ">{errorMessage}</p> : null}
@@ -162,7 +162,7 @@ function SignInPage() {
                   ) : null}
                   <div className="flex flex-col">
                   <button
-                    className={`p-2 px-4 rounded bg-green-400 my-4 ${isLoading ? "opacity-50 cursor-not-allowed" : null}`}
+                    className={`p-2 px-4 rounded bg-green-300 border-green-600 text-green-700 border-2 my-4 ${isLoading ? "opacity-50 cursor-not-allowed" : null}`}
                     onClick={handleSubmit}
                     disabled={isLoading}
                   >
@@ -189,6 +189,9 @@ function SignInPage() {
           />
           </div>
         </div>
+<Link to="/about">
+<div className="bg-blue-200 bg-border-600 text-blue-700 border-2 px-2 py-1 rounded">Dont know what it is, read here.</div>
+</Link>
       </div>
     </div>
   );

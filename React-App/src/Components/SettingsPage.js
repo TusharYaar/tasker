@@ -233,7 +233,7 @@ function SettingsPage({ data, sidebarVisible, updateSidebar }) {
             Update Project
           </button>
         </form>
-      </div>
+      </div> {data.uid === currentUser.uid&&
       <div className="border p-4 my-2 md:my-4 flex-col flex items-start">
         <h3 className="text-3xl my-2">Unsafe Area</h3>
         <p className="text">
@@ -262,7 +262,7 @@ function SettingsPage({ data, sidebarVisible, updateSidebar }) {
         >
           Delete Project
         </button>
-      </div>
+      </div>}
     </div>
   );
 }

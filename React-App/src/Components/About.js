@@ -76,10 +76,10 @@ function About() {
                 <h3 className="text-xl md:text-2xl">About the Project</h3>
                 <p>
                   The prime reason to build the site was to see what I learnt
-                  after completing the raect course(Finally). I also wanted to
+                  after completing the react course(Finally). I also wanted to
                   use firebase, so here it is, Presenting you Arga, the app
                   build with react and Firebase to manage your different Todos
-                  for your project.
+                  for your project. You can collaborator on projects and see the updates in real time.
                 </p>
               </div>
               <div className="border p-4 my-4 rounded text-lg w-full ">

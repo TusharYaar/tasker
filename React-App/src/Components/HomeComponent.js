@@ -183,6 +183,9 @@ const Home = () => {
       query.forEach((doc) => {
         dataID = doc.id;
       });
+      if (!dataID)
+        return {message: "Token Does Not exists",type:"error"}
+      
       const newLastUpdated = database.convertTimestamp(new Date());
       query = await database.projects.doc(dataID).update({
         allowedUsers: database.arrayUnion(currentUser.uid),
@@ -190,7 +193,8 @@ const Home = () => {
       });
       return { message: "success", type: "success" };
     } catch (err) {
-      return { message: err.message, type: "error" };
+      console.log(err.message)
+      return { message:"Token has expired", type: "error" };
     }
   };
   return (
@@ -275,7 +279,6 @@ const Home = () => {
                   <SettingsPage
                     data={data}
                     isTaskLoading={isTaskLoading}
-                    // updateProjectSettings={updateProjectSettings}
                     sidebarVisible={sidebarVisible}
                     updateSidebar={updateSidebar}
                   />
